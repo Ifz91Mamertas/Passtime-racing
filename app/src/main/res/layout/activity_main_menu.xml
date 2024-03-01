@@ -12,6 +12,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="152dp"
         android:layout_marginBottom="75dp"
+<<<<<<< HEAD
         android:text="Play"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
@@ -25,4 +26,9 @@
         android:text="Options"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
+=======
+        android:text="Button"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+>>>>>>> origin/main
 </androidx.constraintlayout.widget.ConstraintLayout>
