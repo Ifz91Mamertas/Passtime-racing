@@ -11,15 +11,18 @@ public class MainMenu extends AppCompatActivity {
 
     Button playbutton;
     Button optionbutton;
+    Boolean isPlaying = false;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_main_menu);
         MediaPlayer mediaPlayer = MediaPlayer.create(this,R.raw.cutmefree);
-        mediaPlayer.setLooping(true);
-
-            mediaPlayer.start();
+        if(isPlaying == false)
+        {
+            startService(new Intent(this, BackgroundMusic.class));
+            isPlaying = true;
+        }
 
         playbutton = (Button) findViewById(R.id.play);
         playbutton.setOnClickListener(new View.OnClickListener()
