@@ -14,10 +14,12 @@ public class MainMenu extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         setContentView(R.layout.activity_main_menu);
         MediaPlayer mediaPlayer = MediaPlayer.create(this,R.raw.cutmefree);
         mediaPlayer.setLooping(true);
-        mediaPlayer.start();
+
+            mediaPlayer.start();
 
         playbutton = (Button) findViewById(R.id.play);
         playbutton.setOnClickListener(new View.OnClickListener()
