@@ -1,7 +1,7 @@
 package com.example.passtime_racing;
 
 import androidx.appcompat.app.AppCompatActivity;
-
+import android.media.MediaPlayer;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -15,6 +15,9 @@ public class MainMenu extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_menu);
+        MediaPlayer mediaPlayer = MediaPlayer.create(this,R.raw.cutmefree);
+        mediaPlayer.setLooping(true);
+        mediaPlayer.start();
 
         playbutton = (Button) findViewById(R.id.play);
         playbutton.setOnClickListener(new View.OnClickListener()
