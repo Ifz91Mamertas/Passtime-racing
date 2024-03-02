@@ -10,7 +10,7 @@ public class Options extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_temp_game);
+        setContentView(R.layout.activity_options);
 
         TextView textView = findViewById(R.id.Option_text);
         String data = getIntent().getStringExtra("Data");

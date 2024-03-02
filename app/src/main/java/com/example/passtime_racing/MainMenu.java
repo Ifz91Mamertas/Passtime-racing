@@ -36,8 +36,8 @@ public class MainMenu extends AppCompatActivity {
             @Override
             public void onClick(View view)
             {
-                Intent intent = new Intent(getBaseContext(), TempGame.class);
-                intent.putExtra("Data", "Laikinas žaidimo meniu");
+                Intent intent = new Intent(getBaseContext(), Options.class);
+                //intent.putExtra("Data", "Laikinas žaidimo meniu");
                 startActivity(intent);
             }
         });
