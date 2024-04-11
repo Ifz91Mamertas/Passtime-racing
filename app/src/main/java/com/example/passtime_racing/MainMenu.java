@@ -8,9 +8,6 @@ import android.view.View;
 import android.widget.Button;
 
 public class MainMenu extends AppCompatActivity {
-
-    ///aaa
-    Button playbutton;
     Button optionbutton;
     Boolean isPlaying = false;
     @Override
@@ -24,18 +21,6 @@ public class MainMenu extends AppCompatActivity {
             startService(new Intent(this, BackgroundMusic.class));
             isPlaying = true;
         }
-
-        playbutton = (Button) findViewById(R.id.play);
-        playbutton.setOnClickListener(new View.OnClickListener()
-        {
-            @Override
-            public void onClick(View view)
-            {
-                Intent intent = new Intent(getBaseContext(), TempGame.class);
-                intent.putExtra("Data", "Laikinas žaidimo meniu");
-                startActivity(intent);
-            }
-        });
         optionbutton = (Button) findViewById(R.id.options);
         optionbutton.setOnClickListener(new View.OnClickListener()
         {
