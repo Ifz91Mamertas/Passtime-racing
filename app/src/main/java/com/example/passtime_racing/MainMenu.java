@@ -3,12 +3,18 @@ package com.example.passtime_racing;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.SharedPreferences;
+import android.graphics.drawable.Drawable;
 import android.media.MediaPlayer;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+import androidx.appcompat.widget.Toolbar;
+import androidx.core.content.ContextCompat;
+
+import android.view.MenuItem;
+import android.view.Menu;
 
 public class MainMenu extends AppCompatActivity {
     Button clicker;
@@ -16,6 +22,7 @@ public class MainMenu extends AppCompatActivity {
     TextView moneyText;
     Button optionbutton;
     Boolean isPlaying = false;
+
     private static final String PREFS_KEY = "money_value";
 
     @Override
@@ -23,6 +30,12 @@ public class MainMenu extends AppCompatActivity {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_main_menu);
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+
+        Drawable drawable = ContextCompat.getDrawable(getApplicationContext(),R.drawable.menu_icon);
+        toolbar.setOverflowIcon(drawable);
+
         MediaPlayer mediaPlayer = MediaPlayer.create(this,R.raw.cutmefree);
         if(isPlaying == false)
         {
@@ -41,7 +54,6 @@ public class MainMenu extends AppCompatActivity {
             public void onClick(View view)
             {
                 Intent intent = new Intent(getBaseContext(), Options.class);
-                //intent.putExtra("Data", "Laikinas žaidimo meniu");
                 startActivity(intent);
             }
         });
@@ -72,5 +84,23 @@ public class MainMenu extends AppCompatActivity {
     private double getSavedMoney() {
         SharedPreferences prefs = getSharedPreferences("MyPrefs", MODE_PRIVATE);
         return prefs.getFloat(PREFS_KEY, 0);
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.main_menu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.action_settings:
+                Intent intent = new Intent(getBaseContext(), Options.class);
+                startActivity(intent);
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 }
