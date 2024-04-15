@@ -34,9 +34,11 @@ public class Options extends AppCompatActivity {
         });
         ToggleButton toggleButton = findViewById(R.id.toggleVolume);
 
-        TextView textView = findViewById(R.id.Option_text);
+        TextView textView = findViewById(R.id.Volumetoggle);
         String data = getIntent().getStringExtra("Data");
-        textView.setText(data);
+
+
+        TextView textView1 = findViewById(R.id.Optiontext);
 
         SeekBar seekBar = findViewById(R.id.seekBar);
         seekBar.setMax(maxVolume);
