@@ -20,6 +20,7 @@ import androidx.drawerlayout.widget.DrawerLayout;
 
 import android.view.MenuItem;
 import android.view.Menu;
+import android.widget.Toast;
 
 import com.google.android.material.navigation.NavigationView;
 
@@ -28,7 +29,9 @@ public class MainMenu extends AppCompatActivity {
     NavigationView navigationView;
     ActionBarDrawerToggle drawerToggle;
     Button clicker;
-    double money = 0;
+    Button upgrade1;
+    long upgrade1_count = 0;
+    long money = 0;
     TextView moneyText;
     Button optionbutton;
     Boolean isPlaying = false;
@@ -50,9 +53,11 @@ public class MainMenu extends AppCompatActivity {
         ///==============XML file finder=====================
         moneyText = (TextView) findViewById(R.id.moneyCount);
         clicker = (Button) findViewById(R.id.clicker);
+        upgrade1 = (Button) findViewById(R.id.upgrade1);
+        upgrade1.setEnabled(false);
         money = getSavedMoney();
+        setUpgradeCount();
         updateMoneyText();
-
         ///==============Drawer settings=====================
         drawerLayout = findViewById(R.id.drawer_layout);
         navigationView = findViewById(R.id.nav_view);
@@ -81,30 +86,59 @@ public class MainMenu extends AppCompatActivity {
         {
             @Override
             public void onClick(View v) {
-                money = money + 1;
+                money = money + (1 + upgrade1_count);
+
+                if(money > 10)
+                {
+                    upgrade1.setEnabled(true);
+                }
+                else
+                {
+                    upgrade1.setEnabled(false);
+                }
                 updateMoneyText();
                 saveMoney();
+            }
+        });
+
+        upgrade1.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                upgrade1_count = upgrade1_count + 1;
+                money = money - 10;
+                if(money > 10)
+                {
+                    upgrade1.setEnabled(true);
+                }
+                else
+                {
+                    upgrade1.setEnabled(false);
+                }
+                saveUpgrades();
+                updateMoneyText();
+                saveMoney();
+                Toast.makeText(MainMenu.this, String.valueOf(upgrade1_count), Toast.LENGTH_SHORT).show();
             }
         });
     }
 
     ///==============Money update method=====================
     private void updateMoneyText() {
-        moneyText.setText("Money: " + String.format("%.0f", money));
+        moneyText.setText("Money: " + String.format("%d", money));
     }
 
     ///==============Save money between launches method=====================
     private void saveMoney() {
-        SharedPreferences prefs = getSharedPreferences("MyPrefs", MODE_PRIVATE);
+        SharedPreferences prefs = getSharedPreferences("Money", MODE_PRIVATE);
         SharedPreferences.Editor editor = prefs.edit();
-        editor.putFloat(PREFS_KEY, (float) money);
+        editor.putLong(PREFS_KEY, (long) money);
         editor.apply();
     }
 
     ///==============Read saved money count method=====================
-    private double getSavedMoney() {
-        SharedPreferences prefs = getSharedPreferences("MyPrefs", MODE_PRIVATE);
-        return prefs.getFloat(PREFS_KEY, 0);
+    private long getSavedMoney() {
+        SharedPreferences prefs = getSharedPreferences("Money", MODE_PRIVATE);
+        return prefs.getLong(PREFS_KEY, 0);
     }
     ///==============Extras for drawer=====================
     @Override
@@ -127,5 +161,18 @@ public class MainMenu extends AppCompatActivity {
             super.onBackPressed();
         }
     }
-    ///==============New methods here=====================
+    ///==============ALL upgrade counts get set here=====================
+    public void setUpgradeCount()
+    {
+        SharedPreferences prefs = getSharedPreferences("Upgrade1", MODE_PRIVATE);
+        upgrade1_count = upgrade1_count + prefs.getLong(PREFS_KEY, 0);
+    }
+    ///==============ALL upgrade counts get saved here=====================
+    public void saveUpgrades()
+    {
+        SharedPreferences prefs = getSharedPreferences("Upgrade1", MODE_PRIVATE);
+        SharedPreferences.Editor editor = prefs.edit();
+        editor.putLong(PREFS_KEY, (long) upgrade1_count);
+        editor.apply();
+    }
 }
