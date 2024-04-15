@@ -1,5 +1,7 @@
 package com.example.passtime_racing;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.SharedPreferences;
@@ -7,57 +9,74 @@ import android.graphics.drawable.Drawable;
 import android.media.MediaPlayer;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.Gravity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.content.ContextCompat;
+import androidx.core.view.GravityCompat;
+import androidx.drawerlayout.widget.DrawerLayout;
 
 import android.view.MenuItem;
 import android.view.Menu;
 
+import com.google.android.material.navigation.NavigationView;
+
 public class MainMenu extends AppCompatActivity {
+    DrawerLayout drawerLayout;
+    NavigationView navigationView;
+    ActionBarDrawerToggle drawerToggle;
     Button clicker;
     double money = 0;
     TextView moneyText;
     Button optionbutton;
     Boolean isPlaying = false;
-
     private static final String PREFS_KEY = "money_value";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        ///==============Music player=====================
         setContentView(R.layout.activity_main_menu);
-        Toolbar toolbar = findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-
-        Drawable drawable = ContextCompat.getDrawable(getApplicationContext(),R.drawable.menu_icon);
-        toolbar.setOverflowIcon(drawable);
-
         MediaPlayer mediaPlayer = MediaPlayer.create(this,R.raw.cutmefree);
+
         if(isPlaying == false)
         {
             startService(new Intent(this, BackgroundMusic.class));
             isPlaying = true;
         }
+        ///==============XML file finder=====================
         moneyText = (TextView) findViewById(R.id.moneyCount);
         clicker = (Button) findViewById(R.id.clicker);
-        optionbutton = (Button) findViewById(R.id.options);
         money = getSavedMoney();
         updateMoneyText();
 
-        optionbutton.setOnClickListener(new View.OnClickListener()
-        {
+        ///==============Drawer settings=====================
+        drawerLayout = findViewById(R.id.drawer_layout);
+        navigationView = findViewById(R.id.nav_view);
+        drawerToggle = new ActionBarDrawerToggle(this, drawerLayout, R.string.open_nav, R.string.close_nav);
+        drawerLayout.addDrawerListener(drawerToggle);
+        drawerToggle.syncState();
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        View headerView = navigationView.getHeaderView(0);
+        TextView navUsername = (TextView) headerView.findViewById(R.id.subtext);
+        navUsername.setText("Main office");
+        navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
             @Override
-            public void onClick(View view)
-            {
-                Intent intent = new Intent(getBaseContext(), Options.class);
-                startActivity(intent);
+            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                if(item.getItemId() == R.id.action_settings)
+                {
+                    Intent intent = new Intent(getBaseContext(), Options.class);
+                    startActivity(intent);
+                }
+
+                return false;
             }
         });
 
+        ///==============Click listeners=====================
         clicker.setOnClickListener(new View.OnClickListener()
         {
             @Override
@@ -69,11 +88,12 @@ public class MainMenu extends AppCompatActivity {
         });
     }
 
+    ///==============Money update method=====================
     private void updateMoneyText() {
         moneyText.setText("Money: " + String.format("%.0f", money));
     }
 
-    // Method to save money value to SharedPreferences
+    ///==============Save money between launches method=====================
     private void saveMoney() {
         SharedPreferences prefs = getSharedPreferences("MyPrefs", MODE_PRIVATE);
         SharedPreferences.Editor editor = prefs.edit();
@@ -81,26 +101,31 @@ public class MainMenu extends AppCompatActivity {
         editor.apply();
     }
 
+    ///==============Read saved money count method=====================
     private double getSavedMoney() {
         SharedPreferences prefs = getSharedPreferences("MyPrefs", MODE_PRIVATE);
         return prefs.getFloat(PREFS_KEY, 0);
     }
-
+    ///==============Extras for drawer=====================
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.main_menu, menu);
-        return true;
+    public boolean onOptionsItemSelected(MenuItem item)
+    {
+        if(drawerToggle.onOptionsItemSelected(item))
+        {
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
-
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.action_settings:
-                Intent intent = new Intent(getBaseContext(), Options.class);
-                startActivity(intent);
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
+    public void onBackPressed() {
+        if(drawerLayout.isDrawerOpen(GravityCompat.START))
+        {
+            drawerLayout.closeDrawer(GravityCompat.START);
+        }
+        else
+        {
+            super.onBackPressed();
         }
     }
+    ///==============New methods here=====================
 }
