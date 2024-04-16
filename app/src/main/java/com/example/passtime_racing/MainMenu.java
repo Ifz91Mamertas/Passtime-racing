@@ -9,6 +9,7 @@ import android.graphics.drawable.Drawable;
 import android.media.MediaPlayer;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.Button;
@@ -24,6 +25,8 @@ import android.widget.Toast;
 
 import com.google.android.material.navigation.NavigationView;
 
+import org.w3c.dom.Text;
+
 public class MainMenu extends AppCompatActivity {
     DrawerLayout drawerLayout;
     NavigationView navigationView;
@@ -31,6 +34,12 @@ public class MainMenu extends AppCompatActivity {
     Button clicker;
     Button upgrade1;
     long upgrade1_count = 0;
+    TextView upgrade1_text;
+    long upgrade1_cost = 10;
+    Button upgrade2;
+    long upgrade2_count = 0;
+    TextView upgrade2_text;
+    long upgrade2_cost = 25;
     long money = 0;
     TextView moneyText;
     Button optionbutton;
@@ -54,10 +63,17 @@ public class MainMenu extends AppCompatActivity {
         moneyText = (TextView) findViewById(R.id.moneyCount);
         clicker = (Button) findViewById(R.id.clicker);
         upgrade1 = (Button) findViewById(R.id.upgrade1);
-        upgrade1.setEnabled(false);
+        upgrade1_text = (TextView) findViewById(R.id.cost_u1);
+        upgrade2 = (Button) findViewById(R.id.upgrade2);
+        upgrade2_text = (TextView) findViewById(R.id.cost_u2);
         money = getSavedMoney();
         setUpgradeCount();
         updateMoneyText();
+
+        checkUpgradeButtons();
+
+        Toast.makeText(MainMenu.this, String.valueOf(upgrade2_cost), Toast.LENGTH_SHORT).show();
+
         ///==============Drawer settings=====================
         drawerLayout = findViewById(R.id.drawer_layout);
         navigationView = findViewById(R.id.nav_view);
@@ -82,22 +98,14 @@ public class MainMenu extends AppCompatActivity {
         });
 
         ///==============Click listeners=====================
-        clicker.setOnClickListener(new View.OnClickListener()
-        {
+        clicker.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 money = money + (1 + upgrade1_count);
-
-                if(money > 10)
-                {
-                    upgrade1.setEnabled(true);
-                }
-                else
-                {
-                    upgrade1.setEnabled(false);
-                }
                 updateMoneyText();
                 saveMoney();
+                updateUpgradeText();
+                checkUpgradeButtons();
             }
         });
 
@@ -105,26 +113,49 @@ public class MainMenu extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 upgrade1_count = upgrade1_count + 1;
-                money = money - 10;
-                if(money > 10)
-                {
-                    upgrade1.setEnabled(true);
-                }
-                else
-                {
-                    upgrade1.setEnabled(false);
-                }
+                money = money - upgrade1_cost;
                 saveUpgrades();
                 updateMoneyText();
                 saveMoney();
-                Toast.makeText(MainMenu.this, String.valueOf(upgrade1_count), Toast.LENGTH_SHORT).show();
+                updateUpgradeText();
+                checkUpgradeButtons();
+            }
+        });
+
+        upgrade2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                upgrade2_count = upgrade2_count + 1;
+                money = money - upgrade2_cost;
+                saveUpgrades();
+                updateMoneyText();
+                saveMoney();
+                updateUpgradeText();
+                checkUpgradeButtons();
+                startMoneyUpdate();
             }
         });
     }
 
+    private static final long DELAY_TIME_UPGRADE2 = 1500;
+    private Handler handler = new Handler();
+
     ///==============Money update method=====================
     private void updateMoneyText() {
         moneyText.setText("Money: " + String.format("%d", money));
+    }
+
+    private void updateUpgradeText()
+    {
+        ///Updating upgrade 1
+        double cost = upgrade1_count * 5 + 10;
+        upgrade1_cost = (long)cost;
+        upgrade1_text.setText("Cost: " + String.format("%d", upgrade1_cost));
+
+        ///Updating upgrade 2
+        cost = upgrade2_count * 2.5 + 25;
+        upgrade2_cost = (long)cost;
+        upgrade2_text.setText("Cost: " + String.format("%d", upgrade2_cost));
     }
 
     ///==============Save money between launches method=====================
@@ -142,8 +173,7 @@ public class MainMenu extends AppCompatActivity {
     }
     ///==============Extras for drawer=====================
     @Override
-    public boolean onOptionsItemSelected(MenuItem item)
-    {
+    public boolean onOptionsItemSelected(MenuItem item) {
         if(drawerToggle.onOptionsItemSelected(item))
         {
             return true;
@@ -166,6 +196,13 @@ public class MainMenu extends AppCompatActivity {
     {
         SharedPreferences prefs = getSharedPreferences("Upgrade1", MODE_PRIVATE);
         upgrade1_count = upgrade1_count + prefs.getLong(PREFS_KEY, 0);
+        double costCount = upgrade1_count * 5 + 10;
+        upgrade1_text.setText("Cost: " + String.format("%.0f", costCount));
+
+        prefs = getSharedPreferences("Upgrade2", MODE_PRIVATE);
+        upgrade2_count = upgrade2_count + prefs.getLong(PREFS_KEY, 0);
+        costCount = upgrade2_count * 2.5 + 25;
+        upgrade2_text.setText("Cost: " + String.format("%.0f", costCount));
     }
     ///==============ALL upgrade counts get saved here=====================
     public void saveUpgrades()
@@ -173,6 +210,45 @@ public class MainMenu extends AppCompatActivity {
         SharedPreferences prefs = getSharedPreferences("Upgrade1", MODE_PRIVATE);
         SharedPreferences.Editor editor = prefs.edit();
         editor.putLong(PREFS_KEY, (long) upgrade1_count);
+
+        prefs = getSharedPreferences("Upgrade2", MODE_PRIVATE);
+        editor = prefs.edit();
+        editor.putLong(PREFS_KEY, (long) upgrade2_count);
+
         editor.apply();
+    }
+
+    private Runnable moneyUpdater = new Runnable() {
+        @Override
+        public void run() {
+            if (upgrade2_count >= 1) {
+                money += upgrade2_count;
+                updateMoneyText();
+                checkUpgradeButtons();
+            }
+            handler.postDelayed(this, DELAY_TIME_UPGRADE2);
+        }
+    };
+
+    private void startMoneyUpdate() {
+        handler.postDelayed(moneyUpdater, DELAY_TIME_UPGRADE2);
+    }
+
+    private void stopMoneyUpdate() {
+        handler.removeCallbacks(moneyUpdater);
+    }
+
+    private void checkUpgradeButtons() {
+        if (money >= upgrade1_cost) {
+            upgrade1.setEnabled(true);
+        } else {
+            upgrade1.setEnabled(false);
+        }
+
+        if (money >= upgrade2_cost) {
+            upgrade2.setEnabled(true);
+        } else {
+            upgrade2.setEnabled(false);
+        }
     }
 }
