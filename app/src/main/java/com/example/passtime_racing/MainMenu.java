@@ -5,27 +5,21 @@ import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.SharedPreferences;
-import android.graphics.drawable.Drawable;
 import android.media.MediaPlayer;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
-import android.view.Gravity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
-import androidx.appcompat.widget.Toolbar;
-import androidx.core.content.ContextCompat;
+
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 
 import android.view.MenuItem;
-import android.view.Menu;
 import android.widget.Toast;
 
 import com.google.android.material.navigation.NavigationView;
-
-import org.w3c.dom.Text;
 
 public class MainMenu extends AppCompatActivity {
     DrawerLayout drawerLayout;
@@ -33,17 +27,18 @@ public class MainMenu extends AppCompatActivity {
     ActionBarDrawerToggle drawerToggle;
     Button clicker;
     Button upgrade1;
-    long upgrade1_count = 0;
+    double upgrade1_count = 0.0;
     TextView upgrade1_text;
-    long upgrade1_cost = 10;
+    double upgrade1_cost = 10.0;
     Button upgrade2;
-    long upgrade2_count = 0;
+    double upgrade2_count = 0.0;
     TextView upgrade2_text;
-    long upgrade2_cost = 25;
-    long money = 0;
+    double upgrade2_cost = 25;
+    double money = 0.0;
     TextView moneyText;
     Button optionbutton;
     Boolean isPlaying = false;
+    boolean isUpgradeUpdating = false;
     private static final String PREFS_KEY = "money_value";
 
     @Override
@@ -71,8 +66,10 @@ public class MainMenu extends AppCompatActivity {
         updateMoneyText();
 
         checkUpgradeButtons();
-
-        Toast.makeText(MainMenu.this, String.valueOf(upgrade2_cost), Toast.LENGTH_SHORT).show();
+        if(!isUpgradeUpdating)
+        {
+            startMoneyUpdate();
+        }
 
         ///==============Drawer settings=====================
         drawerLayout = findViewById(R.id.drawer_layout);
@@ -119,6 +116,8 @@ public class MainMenu extends AppCompatActivity {
                 saveMoney();
                 updateUpgradeText();
                 checkUpgradeButtons();
+
+                Toast.makeText(MainMenu.this, String.valueOf(upgrade1_count), Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -132,44 +131,52 @@ public class MainMenu extends AppCompatActivity {
                 saveMoney();
                 updateUpgradeText();
                 checkUpgradeButtons();
-                startMoneyUpdate();
+                if(isUpgradeUpdating)
+                {
+                    stopMoneyUpdate();
+                    startMoneyUpdate();
+                }
+
+                Toast.makeText(MainMenu.this, String.valueOf(upgrade2_count), Toast.LENGTH_SHORT).show();
             }
         });
     }
 
-    private static final long DELAY_TIME_UPGRADE2 = 1500;
+    private static final long DELAY_TIME_UPGRADE2 = 100;
     private Handler handler = new Handler();
 
     ///==============Money update method=====================
     private void updateMoneyText() {
-        moneyText.setText("Money: " + String.format("%d", money));
+        moneyText.setText("Money: " + String.format("%.0f", money));
+        saveMoney();
     }
 
     private void updateUpgradeText()
     {
         ///Updating upgrade 1
-        double cost = upgrade1_count * 5 + 10;
-        upgrade1_cost = (long)cost;
-        upgrade1_text.setText("Cost: " + String.format("%d", upgrade1_cost));
+        double cost = 10 * Math.pow(3, upgrade1_count);
+        upgrade1_cost = cost;
+        upgrade1_text.setText("Cost: " + String.format("%.0f", upgrade1_cost));
 
         ///Updating upgrade 2
-        cost = upgrade2_count * 2.5 + 25;
-        upgrade2_cost = (long)cost;
-        upgrade2_text.setText("Cost: " + String.format("%d", upgrade2_cost));
+        cost = 30 * Math.pow(1.1, upgrade2_count);
+        upgrade2_cost = cost;
+        upgrade2_text.setText("Cost: " + String.format("%.0f", upgrade2_cost));
     }
 
     ///==============Save money between launches method=====================
     private void saveMoney() {
         SharedPreferences prefs = getSharedPreferences("Money", MODE_PRIVATE);
         SharedPreferences.Editor editor = prefs.edit();
-        editor.putLong(PREFS_KEY, (long) money);
+        editor.putString(PREFS_KEY, String.valueOf(money));
         editor.apply();
     }
 
     ///==============Read saved money count method=====================
-    private long getSavedMoney() {
+    private double getSavedMoney() {
         SharedPreferences prefs = getSharedPreferences("Money", MODE_PRIVATE);
-        return prefs.getLong(PREFS_KEY, 0);
+        String savedMoneyString = prefs.getString(PREFS_KEY, "0.0");
+        return Double.parseDouble(savedMoneyString);
     }
     ///==============Extras for drawer=====================
     @Override
@@ -195,13 +202,13 @@ public class MainMenu extends AppCompatActivity {
     public void setUpgradeCount()
     {
         SharedPreferences prefs = getSharedPreferences("Upgrade1", MODE_PRIVATE);
-        upgrade1_count = upgrade1_count + prefs.getLong(PREFS_KEY, 0);
-        double costCount = upgrade1_count * 5 + 10;
+        upgrade1_count = upgrade1_count + Double.parseDouble(prefs.getString(PREFS_KEY, "0.0"));
+        double costCount = 10 * Math.pow(3, upgrade1_count);
         upgrade1_text.setText("Cost: " + String.format("%.0f", costCount));
 
         prefs = getSharedPreferences("Upgrade2", MODE_PRIVATE);
-        upgrade2_count = upgrade2_count + prefs.getLong(PREFS_KEY, 0);
-        costCount = upgrade2_count * 2.5 + 25;
+        upgrade2_count = upgrade2_count + Double.parseDouble(prefs.getString(PREFS_KEY, "0.0"));
+        costCount = 30 * Math.pow(1.1, upgrade2_count);
         upgrade2_text.setText("Cost: " + String.format("%.0f", costCount));
     }
     ///==============ALL upgrade counts get saved here=====================
@@ -209,20 +216,20 @@ public class MainMenu extends AppCompatActivity {
     {
         SharedPreferences prefs = getSharedPreferences("Upgrade1", MODE_PRIVATE);
         SharedPreferences.Editor editor = prefs.edit();
-        editor.putLong(PREFS_KEY, (long) upgrade1_count);
+        editor.putString(PREFS_KEY, String.valueOf(upgrade1_count));
 
         prefs = getSharedPreferences("Upgrade2", MODE_PRIVATE);
         editor = prefs.edit();
-        editor.putLong(PREFS_KEY, (long) upgrade2_count);
+        editor.putString(PREFS_KEY, String.valueOf(upgrade2_count));
 
         editor.apply();
     }
 
-    private Runnable moneyUpdater = new Runnable() {
+    private Runnable moneyUpdater_upgade2 = new Runnable() {
         @Override
         public void run() {
             if (upgrade2_count >= 1) {
-                money += upgrade2_count;
+                money += 0.01 * upgrade2_count;
                 updateMoneyText();
                 checkUpgradeButtons();
             }
@@ -231,11 +238,13 @@ public class MainMenu extends AppCompatActivity {
     };
 
     private void startMoneyUpdate() {
-        handler.postDelayed(moneyUpdater, DELAY_TIME_UPGRADE2);
+        handler.postDelayed(moneyUpdater_upgade2, DELAY_TIME_UPGRADE2);
+        isUpgradeUpdating = true;
     }
 
     private void stopMoneyUpdate() {
-        handler.removeCallbacks(moneyUpdater);
+        handler.removeCallbacks(moneyUpdater_upgade2);
+        isUpgradeUpdating = false;
     }
 
     private void checkUpgradeButtons() {
