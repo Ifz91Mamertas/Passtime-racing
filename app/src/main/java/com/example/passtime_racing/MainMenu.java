@@ -34,6 +34,14 @@ public class MainMenu extends AppCompatActivity {
     double upgrade2_count = 0.0;
     TextView upgrade2_text;
     double upgrade2_cost = 25;
+    Button upgrade3;
+    double upgrade3_count = 0.0;
+    TextView upgrade3_text;
+    double upgrade3_cost = 100;
+    Button upgrade4;
+    double upgrade4_count = 0.0;
+    TextView upgrade4_text;
+    double upgrade4_cost = 250;
     double money = 0.0;
     TextView moneyText;
     Button optionbutton;
@@ -61,6 +69,10 @@ public class MainMenu extends AppCompatActivity {
         upgrade1_text = (TextView) findViewById(R.id.cost_u1);
         upgrade2 = (Button) findViewById(R.id.upgrade2);
         upgrade2_text = (TextView) findViewById(R.id.cost_u2);
+        upgrade3 = (Button) findViewById(R.id.upgrade3);
+        upgrade3_text = (TextView) findViewById(R.id.cost_u3);
+        upgrade4 = (Button) findViewById(R.id.upgrade4);
+        upgrade4_text = (TextView) findViewById(R.id.cost_u4);
         money = getSavedMoney();
         setUpgradeCount();
         updateMoneyText();
@@ -140,9 +152,49 @@ public class MainMenu extends AppCompatActivity {
                 Toast.makeText(MainMenu.this, String.valueOf(upgrade2_count), Toast.LENGTH_SHORT).show();
             }
         });
+
+        upgrade3.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                upgrade3_count = upgrade3_count + 1;
+                money = money - upgrade3_cost;
+                saveUpgrades();
+                updateMoneyText();
+                saveMoney();
+                updateUpgradeText();
+                checkUpgradeButtons();
+                if(isUpgradeUpdating)
+                {
+                    stopMoneyUpdate();
+                    startMoneyUpdate();
+                }
+
+                Toast.makeText(MainMenu.this, String.valueOf(upgrade3_count), Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        upgrade4.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                upgrade4_count = upgrade4_count + 1;
+                money = money - upgrade4_cost;
+                saveUpgrades();
+                updateMoneyText();
+                saveMoney();
+                updateUpgradeText();
+                checkUpgradeButtons();
+                if(isUpgradeUpdating)
+                {
+                    stopMoneyUpdate();
+                    startMoneyUpdate();
+                }
+
+                Toast.makeText(MainMenu.this, String.valueOf(upgrade4_count), Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
-    private static final long DELAY_TIME_UPGRADE2 = 100;
+    private static final long DELAY_TIME_UPGRADE = 100;
     private Handler handler = new Handler();
 
     ///==============Money update method=====================
@@ -162,6 +214,16 @@ public class MainMenu extends AppCompatActivity {
         cost = 30 * Math.pow(1.1, upgrade2_count);
         upgrade2_cost = cost;
         upgrade2_text.setText("Cost: " + String.format("%.0f", upgrade2_cost));
+
+        ///Updating upgrade 3
+        cost = 100 * Math.pow(1.2, upgrade3_count);
+        upgrade3_cost = cost;
+        upgrade3_text.setText("Cost: " + String.format("%.0f", upgrade3_cost));
+
+        ///Updating upgrade 4
+        cost = 250 * Math.pow(1.3, upgrade4_count);
+        upgrade4_cost = cost;
+        upgrade4_text.setText("Cost: " + String.format("%.0f", upgrade4_cost));
     }
 
     ///==============Save money between launches method=====================
@@ -210,6 +272,16 @@ public class MainMenu extends AppCompatActivity {
         upgrade2_count = upgrade2_count + Double.parseDouble(prefs.getString(PREFS_KEY, "0.0"));
         costCount = 30 * Math.pow(1.1, upgrade2_count);
         upgrade2_text.setText("Cost: " + String.format("%.0f", costCount));
+
+        prefs = getSharedPreferences("Upgrade3", MODE_PRIVATE);
+        upgrade3_count = upgrade3_count + Double.parseDouble(prefs.getString(PREFS_KEY, "0.0"));
+        costCount = 100 * Math.pow(1.2, upgrade3_count);
+        upgrade3_text.setText("Cost: " + String.format("%.0f", costCount));
+
+        prefs = getSharedPreferences("Upgrade4", MODE_PRIVATE);
+        upgrade4_count = upgrade4_count + Double.parseDouble(prefs.getString(PREFS_KEY, "0.0"));
+        costCount = 250 * Math.pow(1.3, upgrade4_count);
+        upgrade4_text.setText("Cost: " + String.format("%.0f", costCount));
     }
     ///==============ALL upgrade counts get saved here=====================
     public void saveUpgrades()
@@ -222,6 +294,14 @@ public class MainMenu extends AppCompatActivity {
         editor = prefs.edit();
         editor.putString(PREFS_KEY, String.valueOf(upgrade2_count));
 
+        prefs = getSharedPreferences("Upgrade3", MODE_PRIVATE);
+        editor = prefs.edit();
+        editor.putString(PREFS_KEY, String.valueOf(upgrade3_count));
+
+        prefs = getSharedPreferences("Upgrade4", MODE_PRIVATE);
+        editor = prefs.edit();
+        editor.putString(PREFS_KEY, String.valueOf(upgrade4_count));
+
         editor.apply();
     }
 
@@ -233,17 +313,45 @@ public class MainMenu extends AppCompatActivity {
                 updateMoneyText();
                 checkUpgradeButtons();
             }
-            handler.postDelayed(this, DELAY_TIME_UPGRADE2);
+            handler.postDelayed(this, DELAY_TIME_UPGRADE);
+        }
+    };
+
+    private Runnable moneyUpdater_upgade3 = new Runnable() {
+        @Override
+        public void run() {
+            if (upgrade3_count >= 1) {
+                money += 0.1 * upgrade3_count;
+                updateMoneyText();
+                checkUpgradeButtons();
+            }
+            handler.postDelayed(this, DELAY_TIME_UPGRADE);
+        }
+    };
+
+    private Runnable moneyUpdater_upgade4 = new Runnable() {
+        @Override
+        public void run() {
+            if (upgrade4_count >= 1) {
+                money += 0.3 * upgrade4_count;
+                updateMoneyText();
+                checkUpgradeButtons();
+            }
+            handler.postDelayed(this, DELAY_TIME_UPGRADE);
         }
     };
 
     private void startMoneyUpdate() {
-        handler.postDelayed(moneyUpdater_upgade2, DELAY_TIME_UPGRADE2);
+        handler.postDelayed(moneyUpdater_upgade2, DELAY_TIME_UPGRADE);
+        handler.postDelayed(moneyUpdater_upgade3, DELAY_TIME_UPGRADE);
+        handler.postDelayed(moneyUpdater_upgade4, DELAY_TIME_UPGRADE);
         isUpgradeUpdating = true;
     }
 
     private void stopMoneyUpdate() {
         handler.removeCallbacks(moneyUpdater_upgade2);
+        handler.removeCallbacks(moneyUpdater_upgade3);
+        handler.removeCallbacks(moneyUpdater_upgade4);
         isUpgradeUpdating = false;
     }
 
@@ -258,6 +366,18 @@ public class MainMenu extends AppCompatActivity {
             upgrade2.setEnabled(true);
         } else {
             upgrade2.setEnabled(false);
+        }
+
+        if (money >= upgrade3_cost) {
+            upgrade3.setEnabled(true);
+        } else {
+            upgrade3.setEnabled(false);
+        }
+
+        if (money >= upgrade4_cost) {
+            upgrade4.setEnabled(true);
+        } else {
+            upgrade4.setEnabled(false);
         }
     }
 }
