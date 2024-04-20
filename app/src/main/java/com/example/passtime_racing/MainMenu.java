@@ -68,19 +68,23 @@ public class MainMenu extends AppCompatActivity {
         mpsText = (TextView) findViewById(R.id.mps);
         clicker = (Button) findViewById(R.id.clicker);
         upgrade1 = (Button) findViewById(R.id.upgrade1);
+        upgrade1.setEnabled(false);
         upgrade1_text = (TextView) findViewById(R.id.cost_u1);
         upgrade2 = (Button) findViewById(R.id.upgrade2);
+        upgrade2.setEnabled(false);
         upgrade2_text = (TextView) findViewById(R.id.cost_u2);
         upgrade3 = (Button) findViewById(R.id.upgrade3);
+        upgrade3.setEnabled(false);
         upgrade3_text = (TextView) findViewById(R.id.cost_u3);
         upgrade4 = (Button) findViewById(R.id.upgrade4);
+        upgrade4.setEnabled(false);
         upgrade4_text = (TextView) findViewById(R.id.cost_u4);
         mps = getSavedMps();
         money = getSavedMoney();
         setUpgradeCount();
         updateMoneyText();
 
-        checkUpgradeButtons();
+
         if(!isUpgradeUpdating)
         {
             startMoneyUpdate();
@@ -110,6 +114,7 @@ public class MainMenu extends AppCompatActivity {
         });
 
         ///==============Click listeners=====================
+        checkUpgradeButtons();
         clicker.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -308,6 +313,8 @@ public class MainMenu extends AppCompatActivity {
         upgrade4_count = Double.parseDouble(prefs4.getString(PREFS_KEY, "0.0"));
         costCount = 250 * Math.pow(1.3, upgrade4_count);
         upgrade4_text.setText("Cost: " + String.format("%.0f", costCount));
+
+        updateUpgradeText();
     }
     ///==============ALL upgrade counts get saved here=====================
     public void saveUpgrades()
@@ -374,6 +381,7 @@ public class MainMenu extends AppCompatActivity {
         handler.postDelayed(moneyUpdater_upgade3, DELAY_TIME_UPGRADE);
         handler.postDelayed(moneyUpdater_upgade4, DELAY_TIME_UPGRADE);
         isUpgradeUpdating = true;
+        checkUpgradeButtons();
     }
 
     private void stopMoneyUpdate() {
