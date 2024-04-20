@@ -23,6 +23,16 @@
                 android:layout_height="102dp"/>
         </LinearLayout>
         <TextView
+            android:id="@+id/mps"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="16dp"
+            android:paddingRight="20dp"
+            android:text="Money Per Second: -"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+        <TextView
             android:id="@+id/moneyCount"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

@@ -44,7 +44,8 @@ public class MainMenu extends AppCompatActivity {
     double upgrade4_cost = 250;
     double money = 0.0;
     TextView moneyText;
-    Button optionbutton;
+    double mps = 0.0;
+    TextView mpsText;
     Boolean isPlaying = false;
     boolean isUpgradeUpdating = false;
     private static final String PREFS_KEY = "money_value";
@@ -64,6 +65,7 @@ public class MainMenu extends AppCompatActivity {
         }
         ///==============XML file finder=====================
         moneyText = (TextView) findViewById(R.id.moneyCount);
+        mpsText = (TextView) findViewById(R.id.mps);
         clicker = (Button) findViewById(R.id.clicker);
         upgrade1 = (Button) findViewById(R.id.upgrade1);
         upgrade1_text = (TextView) findViewById(R.id.cost_u1);
@@ -73,6 +75,7 @@ public class MainMenu extends AppCompatActivity {
         upgrade3_text = (TextView) findViewById(R.id.cost_u3);
         upgrade4 = (Button) findViewById(R.id.upgrade4);
         upgrade4_text = (TextView) findViewById(R.id.cost_u4);
+        mps = getSavedMps();
         money = getSavedMoney();
         setUpgradeCount();
         updateMoneyText();
@@ -136,6 +139,7 @@ public class MainMenu extends AppCompatActivity {
         upgrade2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                mps = mps + 0.1;
                 upgrade2_count = upgrade2_count + 1;
                 money = money - upgrade2_cost;
                 saveUpgrades();
@@ -156,6 +160,7 @@ public class MainMenu extends AppCompatActivity {
         upgrade3.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                mps = mps + 1;
                 upgrade3_count = upgrade3_count + 1;
                 money = money - upgrade3_cost;
                 saveUpgrades();
@@ -176,6 +181,7 @@ public class MainMenu extends AppCompatActivity {
         upgrade4.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                mps = mps + 3;
                 upgrade4_count = upgrade4_count + 1;
                 money = money - upgrade4_cost;
                 saveUpgrades();
@@ -194,12 +200,14 @@ public class MainMenu extends AppCompatActivity {
         });
     }
 
+    ///==============Variables for methods below=====================
     private static final long DELAY_TIME_UPGRADE = 100;
     private Handler handler = new Handler();
 
     ///==============Money update method=====================
     private void updateMoneyText() {
         moneyText.setText("Money: " + String.format("%.0f", money));
+        mpsText.setText("Money Per Second: " + String.format("%.1f", mps));
         saveMoney();
     }
 
@@ -232,6 +240,16 @@ public class MainMenu extends AppCompatActivity {
         SharedPreferences.Editor editor = prefs.edit();
         editor.putString(PREFS_KEY, String.valueOf(money));
         editor.apply();
+
+        saveMps();
+    }
+
+    ///==============Save money between launches method=====================
+    private void saveMps() {
+        SharedPreferences prefs = getSharedPreferences("MPS", MODE_PRIVATE);
+        SharedPreferences.Editor editor = prefs.edit();
+        editor.putString(PREFS_KEY, String.valueOf(mps));
+        editor.apply();
     }
 
     ///==============Read saved money count method=====================
@@ -239,6 +257,14 @@ public class MainMenu extends AppCompatActivity {
         SharedPreferences prefs = getSharedPreferences("Money", MODE_PRIVATE);
         String savedMoneyString = prefs.getString(PREFS_KEY, "0.0");
         return Double.parseDouble(savedMoneyString);
+    }
+
+    ///==============Read saved Money Per Second count method=====================
+    private double getSavedMps() {
+        SharedPreferences prefs = getSharedPreferences("MPS", MODE_PRIVATE);
+        String savedMpsString = prefs.getString(PREFS_KEY, "0.0");
+
+        return Double.parseDouble(savedMpsString);
     }
     ///==============Extras for drawer=====================
     @Override
@@ -263,46 +289,48 @@ public class MainMenu extends AppCompatActivity {
     ///==============ALL upgrade counts get set here=====================
     public void setUpgradeCount()
     {
-        SharedPreferences prefs = getSharedPreferences("Upgrade1", MODE_PRIVATE);
-        upgrade1_count = upgrade1_count + Double.parseDouble(prefs.getString(PREFS_KEY, "0.0"));
+        SharedPreferences prefs1 = getSharedPreferences("Upgrade1", MODE_PRIVATE);
+        upgrade1_count = Double.parseDouble(prefs1.getString(PREFS_KEY, "0.0"));
         double costCount = 10 * Math.pow(3, upgrade1_count);
         upgrade1_text.setText("Cost: " + String.format("%.0f", costCount));
 
-        prefs = getSharedPreferences("Upgrade2", MODE_PRIVATE);
-        upgrade2_count = upgrade2_count + Double.parseDouble(prefs.getString(PREFS_KEY, "0.0"));
+        SharedPreferences prefs2 = getSharedPreferences("Upgrade2", MODE_PRIVATE);
+        upgrade2_count = Double.parseDouble(prefs2.getString(PREFS_KEY, "0.0"));
         costCount = 30 * Math.pow(1.1, upgrade2_count);
         upgrade2_text.setText("Cost: " + String.format("%.0f", costCount));
 
-        prefs = getSharedPreferences("Upgrade3", MODE_PRIVATE);
-        upgrade3_count = upgrade3_count + Double.parseDouble(prefs.getString(PREFS_KEY, "0.0"));
+        SharedPreferences prefs3 = getSharedPreferences("Upgrade3", MODE_PRIVATE);
+        upgrade3_count = Double.parseDouble(prefs3.getString(PREFS_KEY, "0.0"));
         costCount = 100 * Math.pow(1.2, upgrade3_count);
         upgrade3_text.setText("Cost: " + String.format("%.0f", costCount));
 
-        prefs = getSharedPreferences("Upgrade4", MODE_PRIVATE);
-        upgrade4_count = upgrade4_count + Double.parseDouble(prefs.getString(PREFS_KEY, "0.0"));
+        SharedPreferences prefs4 = getSharedPreferences("Upgrade4", MODE_PRIVATE);
+        upgrade4_count = Double.parseDouble(prefs4.getString(PREFS_KEY, "0.0"));
         costCount = 250 * Math.pow(1.3, upgrade4_count);
         upgrade4_text.setText("Cost: " + String.format("%.0f", costCount));
     }
     ///==============ALL upgrade counts get saved here=====================
     public void saveUpgrades()
     {
-        SharedPreferences prefs = getSharedPreferences("Upgrade1", MODE_PRIVATE);
-        SharedPreferences.Editor editor = prefs.edit();
-        editor.putString(PREFS_KEY, String.valueOf(upgrade1_count));
+        SharedPreferences prefs1 = getSharedPreferences("Upgrade1", MODE_PRIVATE);
+        SharedPreferences.Editor editor1 = prefs1.edit();
+        editor1.putString(PREFS_KEY, String.valueOf(upgrade1_count));
+        editor1.apply();
 
-        prefs = getSharedPreferences("Upgrade2", MODE_PRIVATE);
-        editor = prefs.edit();
-        editor.putString(PREFS_KEY, String.valueOf(upgrade2_count));
+        SharedPreferences prefs2 = getSharedPreferences("Upgrade2", MODE_PRIVATE);
+        SharedPreferences.Editor editor2 = prefs2.edit();
+        editor2.putString(PREFS_KEY, String.valueOf(upgrade2_count));
+        editor2.apply();
 
-        prefs = getSharedPreferences("Upgrade3", MODE_PRIVATE);
-        editor = prefs.edit();
-        editor.putString(PREFS_KEY, String.valueOf(upgrade3_count));
+        SharedPreferences prefs3 = getSharedPreferences("Upgrade3", MODE_PRIVATE);
+        SharedPreferences.Editor editor3 = prefs3.edit();
+        editor3.putString(PREFS_KEY, String.valueOf(upgrade3_count));
+        editor3.apply();
 
-        prefs = getSharedPreferences("Upgrade4", MODE_PRIVATE);
-        editor = prefs.edit();
-        editor.putString(PREFS_KEY, String.valueOf(upgrade4_count));
-
-        editor.apply();
+        SharedPreferences prefs4 = getSharedPreferences("Upgrade4", MODE_PRIVATE);
+        SharedPreferences.Editor editor4 = prefs4.edit();
+        editor4.putString(PREFS_KEY, String.valueOf(upgrade4_count));
+        editor4.apply();
     }
 
     private Runnable moneyUpdater_upgade2 = new Runnable() {
