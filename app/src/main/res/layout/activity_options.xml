@@ -8,7 +8,7 @@
     tools:context=".Options">
 
     <TextView
-        android:id="@+id/Volumetoggle"
+        android:id="@+id/textView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Volume toggle"
@@ -58,7 +58,7 @@
         app:layout_constraintVertical_bias="0.557" />
 
     <TextView
-        android:id="@+id/Optiontext"
+        android:id="@+id/textView2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Volume"

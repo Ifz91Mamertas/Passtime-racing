@@ -5,7 +5,6 @@ import android.media.AudioManager;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Button;
 import android.widget.SeekBar;
@@ -34,11 +33,11 @@ public class Options extends AppCompatActivity {
         });
         ToggleButton toggleButton = findViewById(R.id.toggleVolume);
 
-        TextView textView = findViewById(R.id.Volumetoggle);
+        TextView textView = findViewById(R.id.textView);
         String data = getIntent().getStringExtra("Data");
 
 
-        TextView textView1 = findViewById(R.id.Optiontext);
+        TextView textView1 = findViewById(R.id.textView2);
 
         SeekBar seekBar = findViewById(R.id.seekBar);
         seekBar.setMax(maxVolume);

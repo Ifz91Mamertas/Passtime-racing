@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.media.MediaPlayer;
 import android.content.Intent;
@@ -203,7 +204,18 @@ public class MainMenu extends AppCompatActivity {
                 Toast.makeText(MainMenu.this, String.valueOf(upgrade4_count), Toast.LENGTH_SHORT).show();
             }
         });
+
+        ///==============Send data method=====================
+        Intent intent = new Intent(MainMenu.this, TempGame.class);
+        intent.putExtra("money", money);
+        intent.putExtra("mps", mps);
+        intent.putExtra("upgrade1_count", upgrade1_count);
+        intent.putExtra("upgrade2_count", upgrade2_count);
+        intent.putExtra("upgrade3_count", upgrade3_count);
+        intent.putExtra("upgrade4_count", upgrade4_count);
+        startActivity(intent);
     }
+
 
     ///==============Variables for methods below=====================
     private static final long DELAY_TIME_UPGRADE = 100;
@@ -316,6 +328,9 @@ public class MainMenu extends AppCompatActivity {
 
         updateUpgradeText();
     }
+
+
+
     ///==============ALL upgrade counts get saved here=====================
     public void saveUpgrades()
     {
