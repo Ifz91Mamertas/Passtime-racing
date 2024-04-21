@@ -8,6 +8,7 @@ import androidx.drawerlayout.widget.DrawerLayout;
 
 import android.media.AudioManager;
 import android.content.Intent;
+import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
@@ -24,7 +25,6 @@ public class Options extends AppCompatActivity {
     NavigationView navigationView;
     ActionBarDrawerToggle drawerToggle;
     AudioManager audioManager;
-    ToggleButton togglebutton;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -38,13 +38,13 @@ public class Options extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         View headerView = navigationView.getHeaderView(0);
         TextView navUsername = (TextView) headerView.findViewById(R.id.subtext);
-        navUsername.setText("Main office");
+        navUsername.setText("Options");
         navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                 if(item.getItemId() == R.id.action_maingame)
                 {
-                    Intent intent = new Intent(getBaseContext(), Options.class);
+                    Intent intent = new Intent(getBaseContext(), MainMenu.class);
                     startActivity(intent);
                 }
                 if(item.getItemId() == R.id.action_stats)
