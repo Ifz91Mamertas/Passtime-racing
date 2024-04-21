@@ -2,9 +2,21 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
+        android:id="@+id/action_maingame"
+        app:showAsAction="never"
+        android:title="Main Office"
+        android:icon="@drawable/menu_icon">
+    </item>
+    <item
         android:id="@+id/action_settings"
         app:showAsAction="never"
         android:title="Settings"
+        android:icon="@drawable/menu_icon">
+    </item>
+    <item
+        android:id="@+id/action_stats"
+        app:showAsAction="never"
+        android:title="Stats"
         android:icon="@drawable/menu_icon">
     </item>
 </menu>
