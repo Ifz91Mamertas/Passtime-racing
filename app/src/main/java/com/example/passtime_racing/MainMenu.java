@@ -4,13 +4,19 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
+import android.animation.ObjectAnimator;
+import android.animation.ValueAnimator;
 import android.content.SharedPreferences;
 import android.media.MediaPlayer;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.util.TypedValue;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.core.view.GravityCompat;
@@ -22,6 +28,10 @@ import android.widget.Toast;
 import com.google.android.material.navigation.NavigationView;
 
 public class MainMenu extends AppCompatActivity {
+    private boolean isIncreasing = true;
+    private boolean isMaxSizeReached = false;
+    private float originalTextSize = 15;
+    private float maxTextSize;
     DrawerLayout drawerLayout;
     NavigationView navigationView;
     ActionBarDrawerToggle drawerToggle;
@@ -117,7 +127,6 @@ public class MainMenu extends AppCompatActivity {
                 return false;
             }
         });
-
         ///==============Click listeners=====================
         checkUpgradeButtons();
         clicker.setOnClickListener(new View.OnClickListener() {
@@ -141,6 +150,7 @@ public class MainMenu extends AppCompatActivity {
                 saveMoney();
                 updateUpgradeText();
                 checkUpgradeButtons();
+                textAnimation(upgrade1_text);
 
                 Toast.makeText(MainMenu.this, String.valueOf(upgrade1_count), Toast.LENGTH_SHORT).show();
             }
@@ -157,6 +167,8 @@ public class MainMenu extends AppCompatActivity {
                 saveMoney();
                 updateUpgradeText();
                 checkUpgradeButtons();
+                textAnimation(mpsText);
+                textAnimation(upgrade2_text);
                 if(isUpgradeUpdating)
                 {
                     stopMoneyUpdate();
@@ -178,6 +190,8 @@ public class MainMenu extends AppCompatActivity {
                 saveMoney();
                 updateUpgradeText();
                 checkUpgradeButtons();
+                textAnimation(mpsText);
+                textAnimation(upgrade3_text);
                 if(isUpgradeUpdating)
                 {
                     stopMoneyUpdate();
@@ -199,6 +213,8 @@ public class MainMenu extends AppCompatActivity {
                 saveMoney();
                 updateUpgradeText();
                 checkUpgradeButtons();
+                textAnimation(mpsText);
+                textAnimation(upgrade4_text);
                 if(isUpgradeUpdating)
                 {
                     stopMoneyUpdate();
@@ -213,6 +229,42 @@ public class MainMenu extends AppCompatActivity {
     ///==============Variables for methods below=====================
     private static final long DELAY_TIME_UPGRADE = 100;
     private Handler handler = new Handler();
+
+    ///==============Text animator=====================
+    public void textAnimation(TextView text)
+    {
+        ValueAnimator increaseAnimator = ValueAnimator.ofFloat
+                (15, 16);
+        increaseAnimator.setDuration(50);
+
+        increaseAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            @Override
+            public void onAnimationUpdate(ValueAnimator animation) {
+                float animatedValue = (float) animation.getAnimatedValue();
+                text.setTextSize(animatedValue);
+            }
+        });
+
+        ValueAnimator decreaseAnimator = ValueAnimator.ofFloat(16, 15);
+        decreaseAnimator.setDuration(50);
+
+        decreaseAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            @Override
+            public void onAnimationUpdate(ValueAnimator animation) {
+                float animatedValue = (float) animation.getAnimatedValue();
+                text.setTextSize(animatedValue);
+            }
+        });
+
+        increaseAnimator.addListener(new AnimatorListenerAdapter() {
+            @Override
+            public void onAnimationEnd(Animator animation) {
+                super.onAnimationEnd(animation);
+                decreaseAnimator.start();
+            }
+        });
+        increaseAnimator.start();
+    }
 
     ///==============Money update method=====================
     private void updateMoneyText() {
