@@ -8,6 +8,12 @@
         android:icon="@drawable/menu_icon">
     </item>
     <item
+        android:id="@+id/action_project"
+        app:showAsAction="never"
+        android:title="Project Car"
+        android:icon="@drawable/menu_icon">
+    </item>
+    <item
         android:id="@+id/action_settings"
         app:showAsAction="never"
         android:title="Settings"

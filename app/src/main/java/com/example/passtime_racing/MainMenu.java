@@ -123,6 +123,11 @@ public class MainMenu extends AppCompatActivity {
                     Intent intent = new Intent(getBaseContext(), Stats.class);
                     startActivity(intent);
                 }
+                if(item.getItemId() == R.id.action_project)
+                {
+                    Intent intent = new Intent(getBaseContext(), ProjectCar.class);
+                    startActivity(intent);
+                }
 
                 return false;
             }
