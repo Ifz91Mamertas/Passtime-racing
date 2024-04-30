@@ -137,7 +137,7 @@ public class MainMenu extends AppCompatActivity {
         clicker.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                money = money + (1 + upgrade1_count);
+                money = money + (100 + upgrade1_count);
                 updateMoneyText();
                 saveMoney();
                 updateUpgradeText();

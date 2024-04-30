@@ -1,9 +1,11 @@
 package com.example.passtime_racing;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 
 import androidx.activity.EdgeToEdge;
@@ -16,15 +18,160 @@ import androidx.core.view.WindowInsetsCompat;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import com.google.android.material.navigation.NavigationView;
+import android.os.Handler;
+import android.widget.Toast;
 
 public class ProjectCar extends AppCompatActivity {
     DrawerLayout drawerLayout;
     NavigationView navigationView;
     ActionBarDrawerToggle drawerToggle;
+    boolean isUpgradeUpdating = false;
+    double car_time;
+    TextView car_time_text;
+    double money;
+    double mps;
+    double car_upgrade1_cost;
+    double car_upgrade2_cost;
+    double car_upgrade3_cost;
+    double car_upgrade4_cost;
+    Button car_upgrade1;
+    Button car_upgrade2;
+    Button car_upgrade3;
+    Button car_upgrade4;
+    TextView cu_text1;
+    TextView cu_text2;
+    TextView cu_text3;
+    TextView cu_text4;
+    TextView rcu_text1;
+    TextView rcu_text2;
+    TextView rcu_text3;
+    TextView rcu_text4;
+    double upgrade1_count;
+    double upgrade2_count;
+    double upgrade3_count;
+    double upgrade4_count;
+    double car_upgrade1_count;
+    double car_upgrade2_count;
+    double car_upgrade3_count;
+    double car_upgrade4_count;
+    TextView moneyText;
+    private static final String PREFS_KEY = "money_value";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_project_car);
+
+        SharedPreferences prefs = getSharedPreferences("Money", MODE_PRIVATE);
+        money = Double.parseDouble(prefs.getString(PREFS_KEY, "0.0"));
+        SharedPreferences prefs2 = getSharedPreferences("MPS", MODE_PRIVATE);
+        mps = Double.parseDouble(prefs2.getString(PREFS_KEY, "0.0"));
+        SharedPreferences prefs3 = getSharedPreferences("Upgrade1", MODE_PRIVATE);
+        upgrade1_count = Double.parseDouble(prefs3.getString(PREFS_KEY, "0.0"));
+        SharedPreferences prefs4 = getSharedPreferences("Upgrade2", MODE_PRIVATE);
+        upgrade2_count = Double.parseDouble(prefs4.getString(PREFS_KEY, "0.0"));
+        SharedPreferences prefs5 = getSharedPreferences("Upgrade3", MODE_PRIVATE);
+        upgrade3_count = Double.parseDouble(prefs5.getString(PREFS_KEY, "0.0"));
+        SharedPreferences prefs6 = getSharedPreferences("Upgrade4", MODE_PRIVATE);
+        upgrade4_count = Double.parseDouble(prefs6.getString(PREFS_KEY, "0.0"));
+
+        moneyText = findViewById(R.id.moneyCount);
+        car_upgrade1 = (Button) findViewById(R.id.car_upgrade1);
+        car_upgrade2 = (Button) findViewById(R.id.car_upgrade2);
+        car_upgrade3 = (Button) findViewById(R.id.car_upgrade3);
+        car_upgrade4 = (Button) findViewById(R.id.car_upgrade4);
+        cu_text1 = findViewById(R.id.cost_cu1);
+        cu_text2 = findViewById(R.id.cost_cu2);
+        cu_text3 = findViewById(R.id.cost_cu3);
+        cu_text4 = findViewById(R.id.cost_cu4);
+        rcu_text1 = findViewById(R.id.req_cu1);
+        rcu_text2 = findViewById(R.id.req_cu2);
+        rcu_text3 = findViewById(R.id.req_cu3);
+        rcu_text4 = findViewById(R.id.req_cu4);
+        car_time_text = findViewById(R.id.car_time);
+
+        checkUpgradeButtons();
+        moneyText.setText(String.format("Money: %.0f", money));
+        setUpgradeCount();
+
+        if(!isUpgradeUpdating)
+        {
+            startMoneyUpdate();
+        }
+
+        ///==============Click listeners=====================
+        checkUpgradeButtons();
+        changeUpgrade1();
+        changeUpgrade2();
+        changeUpgrade3();
+        changeUpgrade4();
+        setCarTime();
+        car_upgrade1.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                money = money - car_upgrade1_cost;
+                car_upgrade1_count = car_upgrade1_count + 1;
+                updateMoneyText();
+                saveMoney();
+                saveUpgrades();
+                updateUpgradeText();
+                checkUpgradeButtons();
+                changeUpgrade1();
+                setCarTime();
+
+                Toast.makeText(ProjectCar.this, String.valueOf(car_upgrade1_count), Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        car_upgrade2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                money = money - car_upgrade2_cost;
+                car_upgrade2_count = car_upgrade2_count + 1;
+                updateMoneyText();
+                saveMoney();
+                saveUpgrades();
+                updateUpgradeText();
+                checkUpgradeButtons();
+                changeUpgrade2();
+                setCarTime();
+
+                Toast.makeText(ProjectCar.this, String.valueOf(car_upgrade2_count), Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        car_upgrade3.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                money = money - car_upgrade3_cost;
+                car_upgrade3_count = car_upgrade3_count + 1;
+                updateMoneyText();
+                saveMoney();
+                saveUpgrades();
+                updateUpgradeText();
+                checkUpgradeButtons();
+                changeUpgrade3();
+                setCarTime();
+
+                Toast.makeText(ProjectCar.this, String.valueOf(car_upgrade3_count), Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        car_upgrade4.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                money = money - car_upgrade4_cost;
+                car_upgrade4_count = car_upgrade4_count + 1;
+                updateMoneyText();
+                saveMoney();
+                saveUpgrades();
+                updateUpgradeText();
+                checkUpgradeButtons();
+                changeUpgrade4();
+                setCarTime();
+
+                Toast.makeText(ProjectCar.this, String.valueOf(car_upgrade4_count), Toast.LENGTH_SHORT).show();
+            }
+        });
 
         ///==============Drawer settings=====================
         drawerLayout = findViewById(R.id.drawer_layout);
@@ -60,6 +207,9 @@ public class ProjectCar extends AppCompatActivity {
         });
     }
 
+    private static final long DELAY_TIME_UPGRADE = 100;
+    private Handler handler = new Handler();
+
     ///==============Extras for drawer=====================
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -81,4 +231,305 @@ public class ProjectCar extends AppCompatActivity {
         }
     }
 
+    public void saveUpgrades()
+    {
+        SharedPreferences prefs1 = getSharedPreferences("Car_Upgrade1", MODE_PRIVATE);
+        SharedPreferences.Editor editor1 = prefs1.edit();
+        editor1.putString(PREFS_KEY, String.valueOf(car_upgrade1_count));
+        editor1.apply();
+
+        SharedPreferences prefs2 = getSharedPreferences("Car_Upgrade2", MODE_PRIVATE);
+        SharedPreferences.Editor editor2 = prefs2.edit();
+        editor2.putString(PREFS_KEY, String.valueOf(car_upgrade2_count));
+        editor2.apply();
+
+        SharedPreferences prefs3 = getSharedPreferences("Car_Upgrade3", MODE_PRIVATE);
+        SharedPreferences.Editor editor3 = prefs3.edit();
+        editor3.putString(PREFS_KEY, String.valueOf(car_upgrade3_count));
+        editor3.apply();
+
+        SharedPreferences prefs4 = getSharedPreferences("Car_Upgrade4", MODE_PRIVATE);
+        SharedPreferences.Editor editor4 = prefs4.edit();
+        editor4.putString(PREFS_KEY, String.valueOf(car_upgrade4_count));
+        editor4.apply();
+    }
+
+    public void setUpgradeCount()
+    {
+        SharedPreferences prefs1 = getSharedPreferences("Car_Upgrade1", MODE_PRIVATE);
+        car_upgrade1_count = Double.parseDouble(prefs1.getString(PREFS_KEY, "0.0"));
+        changeUpgrade1();
+
+        SharedPreferences prefs2 = getSharedPreferences("Car_Upgrade2", MODE_PRIVATE);
+        car_upgrade2_count = Double.parseDouble(prefs2.getString(PREFS_KEY, "0.0"));
+        changeUpgrade2();
+
+        SharedPreferences prefs3 = getSharedPreferences("Car_Upgrade3", MODE_PRIVATE);
+        car_upgrade3_count = Double.parseDouble(prefs3.getString(PREFS_KEY, "0.0"));
+        changeUpgrade3();
+
+        SharedPreferences prefs4 = getSharedPreferences("Car_Upgrade4", MODE_PRIVATE);
+        car_upgrade4_count = Double.parseDouble(prefs4.getString(PREFS_KEY, "0.0"));
+        changeUpgrade4();
+
+        updateUpgradeText();
+    }
+
+    private void updateUpgradeText()
+    {
+        ///Updating upgrade 1
+        changeUpgrade1();
+        cu_text1.setText("Cost: " + String.format("%.0f", car_upgrade1_cost));
+
+        ///Updating upgrade 2
+        changeUpgrade2();
+        cu_text2.setText("Cost: " + String.format("%.0f", car_upgrade2_cost));
+
+        ///Updating upgrade 3
+        changeUpgrade3();
+        cu_text3.setText("Cost: " + String.format("%.0f", car_upgrade3_cost));
+
+        ///Updating upgrade 4
+        changeUpgrade4();
+        cu_text4.setText("Cost: " + String.format("%.0f", car_upgrade4_cost));
+    }
+
+    private Runnable moneyUpdater_upgade2 = new Runnable() {
+        @Override
+        public void run() {
+            if (upgrade2_count >= 1) {
+                money += 0.01 * upgrade2_count;
+                updateMoneyText();
+                checkUpgradeButtons();
+            }
+            handler.postDelayed(this, DELAY_TIME_UPGRADE);
+        }
+    };
+
+    private Runnable moneyUpdater_upgade3 = new Runnable() {
+        @Override
+        public void run() {
+            if (upgrade3_count >= 1) {
+                money += 0.1 * upgrade3_count;
+                updateMoneyText();
+                checkUpgradeButtons();
+            }
+            handler.postDelayed(this, DELAY_TIME_UPGRADE);
+        }
+    };
+
+    private Runnable moneyUpdater_upgade4 = new Runnable() {
+        @Override
+        public void run() {
+            if (upgrade4_count >= 1) {
+                money += 0.3 * upgrade4_count;
+                updateMoneyText();
+                checkUpgradeButtons();
+            }
+            handler.postDelayed(this, DELAY_TIME_UPGRADE);
+        }
+    };
+
+    private void startMoneyUpdate() {
+        handler.postDelayed(moneyUpdater_upgade2, DELAY_TIME_UPGRADE);
+        handler.postDelayed(moneyUpdater_upgade3, DELAY_TIME_UPGRADE);
+        handler.postDelayed(moneyUpdater_upgade4, DELAY_TIME_UPGRADE);
+        isUpgradeUpdating = true;
+        checkUpgradeButtons();
+    }
+
+    private void updateMoneyText() {
+        moneyText.setText("Money: " + String.format("%.0f", money));
+        saveMoney();
+    }
+
+    private void saveMoney() {
+        SharedPreferences prefs = getSharedPreferences("Money", MODE_PRIVATE);
+        SharedPreferences.Editor editor = prefs.edit();
+        editor.putString(PREFS_KEY, String.valueOf(money));
+        editor.apply();
+    }
+
+    private void checkUpgradeButtons() {
+        if (money >= car_upgrade1_cost) {
+            if (car_upgrade1_count == 0 ||
+                    (car_upgrade1_count == 1 && upgrade2_count == 10) ||
+                    (car_upgrade1_count == 2 && upgrade2_count == 20 && upgrade3_count == 2) ||
+                    (car_upgrade1_count == 3 && upgrade2_count == 40 && upgrade3_count == 5 && upgrade4_count == 2)) {
+                car_upgrade1.setEnabled(true);
+            }
+            else
+            {
+                car_upgrade1.setEnabled(false);
+            }
+        }
+        else
+        {
+            car_upgrade1.setEnabled(false);
+        }
+
+        if (money >= car_upgrade2_cost)
+        {
+            if  (car_upgrade2_count == 0 ||
+                (car_upgrade2_count == 1 && upgrade2_count == 25) ||
+                (car_upgrade2_count == 2 && upgrade3_count == 25) ||
+                (car_upgrade2_count == 3 && upgrade4_count == 25))
+            {
+                car_upgrade2.setEnabled(true);
+            }
+            else
+            {
+                car_upgrade2.setEnabled(false);
+            }
+        }
+        else
+        {
+            car_upgrade2.setEnabled(false);
+        }
+
+        if (money >= car_upgrade3_cost)
+        {
+            if  (car_upgrade3_count == 0 ||
+                (car_upgrade3_count == 1 && upgrade1_count == 1) ||
+                (car_upgrade3_count == 2 && upgrade1_count == 2 && upgrade3_count == 3) ||
+                (car_upgrade3_count == 3 && upgrade1_count == 5 && upgrade2_count == 5 && upgrade3_count == 1))
+            {
+                car_upgrade3.setEnabled(true);
+            }
+            else
+            {
+                car_upgrade3.setEnabled(false);
+            }
+        }
+        else
+        {
+            car_upgrade3.setEnabled(false);
+        }
+
+        if (money >= car_upgrade4_cost)
+        {
+            if  ((car_upgrade4_count == 0 && upgrade2_count == 10)||
+                (car_upgrade4_count == 1 && upgrade2_count == 15 && upgrade3_count == 5) ||
+                (car_upgrade4_count == 2 && upgrade2_count == 25 && upgrade3_count == 10 && upgrade4_count == 1) ||
+                (car_upgrade4_count == 3 && upgrade2_count == 35 && upgrade3_count == 15 && upgrade4_count == 5))
+            {
+                car_upgrade4.setEnabled(true);
+            }
+            else
+            {
+                car_upgrade4.setEnabled(false);
+            }
+        }
+        else
+        {
+            car_upgrade4.setEnabled(false);
+        }
+    }
+
+    private void changeUpgrade1() {
+        switch ((int) car_upgrade1_count) {
+            case 0:
+                car_upgrade1_cost = 1000;
+                rcu_text1.setText("Needs:\n-");
+                break;
+            case 1:
+                car_upgrade1_cost = 2500;
+                rcu_text1.setText("Needs:\n\n10 Mechanics\nWorkshop");
+                break;
+            case 2:
+                car_upgrade1_cost = 6000;
+                rcu_text1.setText("Needs:\n\n20 Mechanics\nWorkshops\n\n2 Body\nshops");
+                break;
+            case 3:
+                car_upgrade1_cost = 10000;
+                rcu_text1.setText("Needs:\n\n40 Mechanics\nWorkshops\n\n5 Body\nshops\n\n2 Race\nSponsors");
+                break;
+            default:
+                car_upgrade1_cost = 0;
+                rcu_text1.setText("Max upgrades\nbought");
+                break;
+        }
+    }
+
+    private void changeUpgrade2() {
+        switch ((int) car_upgrade2_count) {
+            case 0:
+                car_upgrade2_cost = 1500;
+                rcu_text2.setText("Needs:\n-");
+                break;
+            case 1:
+                car_upgrade2_cost = 2500;
+                rcu_text2.setText("Needs:\n\n25 Mechanics\nWorkshops");
+                break;
+            case 2:
+                car_upgrade2_cost = 6000;
+                rcu_text2.setText("Needs:\n\n25 Body\nShops");
+                break;
+            case 3:
+                car_upgrade2_cost = 9000;
+                rcu_text2.setText("Needs:\n\n25 Race\nSponsors");
+                break;
+            default:
+                car_upgrade2_cost = 0;
+                rcu_text2.setText("Max upgrades\nbought");
+                break;
+        }
+    }
+
+    private void changeUpgrade3() {
+        switch ((int) car_upgrade3_count) {
+            case 0:
+                car_upgrade3_cost = 500;
+                rcu_text3.setText("Needs:\n-");
+                break;
+            case 1:
+                car_upgrade3_cost = 1500;
+                rcu_text3.setText("Needs:\n\n1 Second Hand\nGarage");
+                break;
+            case 2:
+                car_upgrade3_cost = 3000;
+                rcu_text3.setText("Needs:\n\n2 Second Hand\nGarages\n\n3 Body\nShops");
+                break;
+            case 3:
+                car_upgrade3_cost = 6500;
+                rcu_text3.setText("Needs:\n\n5 Second Hand\nGarages\n\n5 Mechanics\nWorkshops\n\n1 Body\nShops");
+                break;
+            default:
+                car_upgrade3_cost = 0;
+                rcu_text3.setText("Max upgrades\nbought");
+                break;
+        }
+    }
+
+    private void changeUpgrade4() {
+        switch ((int) car_upgrade4_count) {
+            case 0:
+                car_upgrade4_cost = 3000;
+                rcu_text4.setText("Needs:\n\n10 Mechanics\nWorkshops");
+                break;
+            case 1:
+                car_upgrade4_cost = 7500;
+                rcu_text4.setText("Needs:\n\n15 Mechanics\nWorkshops\n\n5 Body\nShops");
+                break;
+            case 2:
+                car_upgrade4_cost = 15000;
+                rcu_text4.setText("Needs:\n\n25 Mechanics\nWorkshops\n\n10 Body\nShops\n\n1 Race\nSponsor");
+                break;
+            case 3:
+                car_upgrade4_cost = 30000;
+                rcu_text4.setText("Needs:\n\n35 Mechanics\nWorkshops\n\n15 Body\nShops\n\n5 Race\nSponsors");
+                break;
+            default:
+                car_upgrade4_cost = 0;
+                rcu_text4.setText("Max upgrades\nbought");
+                break;
+        }
+    }
+
+    private void setCarTime()
+    {
+        car_time = 15f - (0.2f * car_upgrade1_count) - (0.15f * car_upgrade2_count)
+                - (0.05f * car_upgrade3_count) - (0.1f * car_upgrade4_count);
+        car_time_text.setText(String.format("Current 1/4 mile time:\n%.2f seconds", car_time));
+    }
 }
