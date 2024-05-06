@@ -57,6 +57,9 @@ public class MainMenu extends AppCompatActivity {
         ///==============Music player=====================
         setContentView(R.layout.activity_main_menu);
         MediaPlayer mediaPlayer = MediaPlayer.create(this,R.raw.cutmefree);
+        MediaPlayer clickSound = MediaPlayer.create(this,R.raw.clicksound);
+        MediaPlayer upgradeSound = MediaPlayer.create(this,R.raw.upgrade);
+        MediaPlayer clickerSound = MediaPlayer.create(this,R.raw.clicker);
 
         if(isPlaying == false)
         {
@@ -123,11 +126,13 @@ public class MainMenu extends AppCompatActivity {
         clicker.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                clickSound.start();
                 money = money + (1 + upgrade1_count);
                 updateMoneyText();
                 saveMoney();
                 updateUpgradeText();
                 checkUpgradeButtons();
+
             }
         });
 
@@ -141,7 +146,7 @@ public class MainMenu extends AppCompatActivity {
                 saveMoney();
                 updateUpgradeText();
                 checkUpgradeButtons();
-
+                upgradeSound.start();
                 Toast.makeText(MainMenu.this, String.valueOf(upgrade1_count), Toast.LENGTH_SHORT).show();
             }
         });
@@ -162,7 +167,7 @@ public class MainMenu extends AppCompatActivity {
                     stopMoneyUpdate();
                     startMoneyUpdate();
                 }
-
+                clickerSound.start();
                 Toast.makeText(MainMenu.this, String.valueOf(upgrade2_count), Toast.LENGTH_SHORT).show();
             }
         });
@@ -183,7 +188,7 @@ public class MainMenu extends AppCompatActivity {
                     stopMoneyUpdate();
                     startMoneyUpdate();
                 }
-
+                upgradeSound.start();
                 Toast.makeText(MainMenu.this, String.valueOf(upgrade3_count), Toast.LENGTH_SHORT).show();
             }
         });
@@ -204,7 +209,7 @@ public class MainMenu extends AppCompatActivity {
                     stopMoneyUpdate();
                     startMoneyUpdate();
                 }
-
+                clickerSound.start();
                 Toast.makeText(MainMenu.this, String.valueOf(upgrade4_count), Toast.LENGTH_SHORT).show();
             }
         });
