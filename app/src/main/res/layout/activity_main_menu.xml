@@ -18,11 +18,14 @@
             android:layout_height="match_parent"
             android:gravity="center"
             android:orientation="vertical">
+
             <Button
                 android:id="@+id/clicker"
                 android:layout_width="102dp"
                 android:layout_height="102dp"
-                android:background="#F89B15"/>
+                android:background="@drawable/click"
+
+                />
         </LinearLayout>
 
         <TextView
