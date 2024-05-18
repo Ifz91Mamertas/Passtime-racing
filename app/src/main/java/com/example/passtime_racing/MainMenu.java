@@ -57,9 +57,8 @@ public class MainMenu extends AppCompatActivity {
         ///==============Music player=====================
         setContentView(R.layout.activity_main_menu);
         MediaPlayer mediaPlayer = MediaPlayer.create(this,R.raw.cutmefree);
-        MediaPlayer clickSound = MediaPlayer.create(this,R.raw.clicksound);
         MediaPlayer upgradeSound = MediaPlayer.create(this,R.raw.upgrade);
-        MediaPlayer clickerSound = MediaPlayer.create(this,R.raw.clicker);
+        MediaPlayer clickSound = MediaPlayer.create(this,R.raw.clicker);
 
         if(isPlaying == false)
         {
@@ -167,7 +166,7 @@ public class MainMenu extends AppCompatActivity {
                     stopMoneyUpdate();
                     startMoneyUpdate();
                 }
-                clickerSound.start();
+                upgradeSound.start();
                 Toast.makeText(MainMenu.this, String.valueOf(upgrade2_count), Toast.LENGTH_SHORT).show();
             }
         });
@@ -209,7 +208,7 @@ public class MainMenu extends AppCompatActivity {
                     stopMoneyUpdate();
                     startMoneyUpdate();
                 }
-                clickerSound.start();
+                upgradeSound.start();
                 Toast.makeText(MainMenu.this, String.valueOf(upgrade4_count), Toast.LENGTH_SHORT).show();
             }
         });
