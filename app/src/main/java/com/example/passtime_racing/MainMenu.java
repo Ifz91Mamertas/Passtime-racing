@@ -11,9 +11,11 @@ import android.animation.ValueAnimator;
 import android.content.SharedPreferences;
 import android.media.MediaPlayer;
 import android.content.Intent;
+import android.content.res.Resources;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.TypedValue;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -60,9 +62,14 @@ public class MainMenu extends AppCompatActivity {
     boolean isUpgradeUpdating = false;
     private static final String PREFS_KEY = "money_value";
 
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main_menu);
+        ImageView imageView =findViewById(R.id.imageView);
+        ImageView imageView2 =findViewById(R.id.imageView2);
 
         ///==============Music player=====================
         setContentView(R.layout.activity_main_menu);
@@ -100,6 +107,17 @@ public class MainMenu extends AppCompatActivity {
             startMoneyUpdate();
         }
 
+        if(upgrade1_count >= 10.0){
+            imageView.setVisibility(View.VISIBLE);
+    } else {
+        imageView.setVisibility(View.INVISIBLE);
+    }
+
+        if(upgrade2_count >= 10.0){
+            imageView2.setVisibility(View.VISIBLE);
+        }else {
+            imageView2.setVisibility(View.INVISIBLE);
+        }
         ///==============Drawer settings=====================
         drawerLayout = findViewById(R.id.drawer_layout);
         navigationView = findViewById(R.id.nav_view);

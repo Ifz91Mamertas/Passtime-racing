@@ -17,7 +17,10 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:gravity="center"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            tools:layout_editor_absoluteX="-47dp"
+            tools:layout_editor_absoluteY="-16dp">
+
 
             <Button
                 android:id="@+id/clicker"
@@ -26,6 +29,8 @@
                 android:background="@drawable/click"
 
                 />
+
+
         </LinearLayout>
 
         <TextView
@@ -63,6 +68,17 @@
             app:layout_constraintTop_toBottomOf="@+id/moneyCount"
             app:layout_constraintStart_toStartOf="parent" />
 
+        <ImageView
+            android:id="@+id/imageView"
+            android:layout_width="55dp"
+            android:layout_height="35dp"
+            android:scaleType="fitCenter"
+            android:visibility="invisible"
+            app:layout_constraintEnd_toEndOf="@id/upgrade1"
+            app:layout_constraintStart_toEndOf="@+id/upgrade1"
+            app:layout_constraintTop_toTopOf="@+id/upgrade1"
+            app:srcCompat="@drawable/star_award" />
+
         <TextView
             android:id="@+id/cost_u1"
             android:layout_width="wrap_content"
@@ -87,6 +103,15 @@
             app:layout_constraintTop_toBottomOf="@+id/upgrade1"
             app:layout_constraintStart_toStartOf="parent" />
 
+        <ImageView
+            android:id="@+id/imageView2"
+            android:layout_width="37dp"
+            android:layout_height="66dp"
+            android:visibility="invisible"
+            app:layout_constraintEnd_toEndOf="@+id/upgrade2"
+            app:layout_constraintStart_toEndOf="@+id/upgrade2"
+            app:layout_constraintTop_toTopOf="@+id/upgrade2"
+            app:srcCompat="@drawable/star_trophy" />
         <TextView
             android:id="@+id/cost_u2"
             android:layout_width="wrap_content"
