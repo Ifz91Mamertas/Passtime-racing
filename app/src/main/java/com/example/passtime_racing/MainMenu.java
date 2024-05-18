@@ -67,6 +67,8 @@ public class MainMenu extends AppCompatActivity {
         ///==============Music player=====================
         setContentView(R.layout.activity_main_menu);
         MediaPlayer mediaPlayer = MediaPlayer.create(this,R.raw.cutmefree);
+        MediaPlayer upgradeSound = MediaPlayer.create(this,R.raw.upgrade);
+        MediaPlayer clickSound = MediaPlayer.create(this,R.raw.clicker);
 
         if(isPlaying == false)
         {
@@ -143,10 +145,13 @@ public class MainMenu extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 money = money + (100 + upgrade1_count);
+                clickSound.start();
+                money = money + (1 + upgrade1_count);
                 updateMoneyText();
                 saveMoney();
                 updateUpgradeText();
                 checkUpgradeButtons();
+
             }
         });
 
@@ -161,7 +166,7 @@ public class MainMenu extends AppCompatActivity {
                 updateUpgradeText();
                 checkUpgradeButtons();
                 textAnimation(upgrade1_text);
-
+                upgradeSound.start();
                 Toast.makeText(MainMenu.this, String.valueOf(upgrade1_count), Toast.LENGTH_SHORT).show();
             }
         });
@@ -184,7 +189,7 @@ public class MainMenu extends AppCompatActivity {
                     stopMoneyUpdate();
                     startMoneyUpdate();
                 }
-
+                upgradeSound.start();
                 Toast.makeText(MainMenu.this, String.valueOf(upgrade2_count), Toast.LENGTH_SHORT).show();
             }
         });
@@ -207,7 +212,7 @@ public class MainMenu extends AppCompatActivity {
                     stopMoneyUpdate();
                     startMoneyUpdate();
                 }
-
+                upgradeSound.start();
                 Toast.makeText(MainMenu.this, String.valueOf(upgrade3_count), Toast.LENGTH_SHORT).show();
             }
         });
@@ -230,7 +235,7 @@ public class MainMenu extends AppCompatActivity {
                     stopMoneyUpdate();
                     startMoneyUpdate();
                 }
-
+                upgradeSound.start();
                 Toast.makeText(MainMenu.this, String.valueOf(upgrade4_count), Toast.LENGTH_SHORT).show();
             }
         });
