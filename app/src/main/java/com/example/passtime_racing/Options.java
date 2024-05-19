@@ -57,6 +57,11 @@ public class Options extends AppCompatActivity {
                     Intent intent = new Intent(getBaseContext(), ProjectCar.class);
                     startActivity(intent);
                 }
+                if(item.getItemId() == R.id.action_racemap)
+                {
+                    Intent intent = new Intent(getBaseContext(), RaceMap.class);
+                    startActivity(intent);
+                }
 
                 return false;
             }

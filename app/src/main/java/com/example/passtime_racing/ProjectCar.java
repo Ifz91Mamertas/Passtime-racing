@@ -201,6 +201,11 @@ public class ProjectCar extends AppCompatActivity {
                     Intent intent = new Intent(getBaseContext(), Stats.class);
                     startActivity(intent);
                 }
+                if(item.getItemId() == R.id.action_racemap)
+                {
+                    Intent intent = new Intent(getBaseContext(), RaceMap.class);
+                    startActivity(intent);
+                }
 
                 return false;
             }
