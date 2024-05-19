@@ -58,6 +58,12 @@ public class MainMenu extends AppCompatActivity {
     TextView moneyText;
     double mps = 0.0;
     TextView mpsText;
+
+    ImageView imageView;
+    ImageView imageView2;
+    ImageView imageView3;
+    ImageView imageView4;
+
     Boolean isPlaying = false;
     boolean isUpgradeUpdating = false;
     private static final String PREFS_KEY = "money_value";
@@ -68,10 +74,10 @@ public class MainMenu extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_menu);
-        ImageView imageView =findViewById(R.id.imageView);
-        ImageView imageView2 =findViewById(R.id.imageView2);
-        ImageView imageView3 =findViewById(R.id.imageView3);
-        ImageView imageView4 =findViewById(R.id.imageView4);
+         imageView = (ImageView) findViewById(R.id.imageView);
+         imageView2 = (ImageView) findViewById(R.id.imageView2);
+         imageView3 = (ImageView) findViewById(R.id.imageView3);
+         imageView4 = (ImageView) findViewById(R.id.imageView4);
 
         ///==============Music player=====================
 
@@ -248,28 +254,7 @@ public class MainMenu extends AppCompatActivity {
             }
         });
 
-        if(upgrade1_count >= 10.0){
-            imageView.setVisibility(View.VISIBLE);
-        } else {
-            imageView.setVisibility(View.INVISIBLE);
-        }
 
-        if(upgrade2_count >= 10.0){
-            imageView2.setVisibility(View.VISIBLE);
-        } else {
-            imageView2.setVisibility(View.INVISIBLE);
-        }
-
-        if(upgrade3_count >= 10.0){
-            imageView3.setVisibility(View.VISIBLE);
-        } else {
-            imageView3.setVisibility(View.INVISIBLE);
-        }
-        if(upgrade4_count >= 10.0){
-            imageView4.setVisibility(View.VISIBLE);
-        } else {
-            imageView4.setVisibility(View.INVISIBLE);
-        }
 
     }
 
@@ -318,6 +303,30 @@ public class MainMenu extends AppCompatActivity {
         moneyText.setText("Money: " + String.format("%.0f", money));
         mpsText.setText("Money Per Second: " + String.format("%.1f", mps));
         saveMoney();
+
+        if(upgrade1_count >= 10.0){
+            imageView.setVisibility(View.VISIBLE);
+        } else {
+            imageView.setVisibility(View.INVISIBLE);
+        }
+
+        if(upgrade2_count >= 10.0){
+            imageView2.setVisibility(View.VISIBLE);
+        } else {
+            imageView2.setVisibility(View.INVISIBLE);
+        }
+
+        if(upgrade3_count >= 10.0){
+            imageView3.setVisibility(View.VISIBLE);
+        } else {
+            imageView3.setVisibility(View.INVISIBLE);
+        }
+        if(upgrade4_count >= 10.0){
+            imageView4.setVisibility(View.VISIBLE);
+        } else {
+            imageView4.setVisibility(View.INVISIBLE);
+        }
+
     }
 
     private void updateUpgradeText()
