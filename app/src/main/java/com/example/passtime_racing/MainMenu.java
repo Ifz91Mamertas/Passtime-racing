@@ -70,9 +70,11 @@ public class MainMenu extends AppCompatActivity {
         setContentView(R.layout.activity_main_menu);
         ImageView imageView =findViewById(R.id.imageView);
         ImageView imageView2 =findViewById(R.id.imageView2);
+        ImageView imageView3 =findViewById(R.id.imageView3);
+        ImageView imageView4 =findViewById(R.id.imageView4);
 
         ///==============Music player=====================
-        setContentView(R.layout.activity_main_menu);
+
         MediaPlayer mediaPlayer = MediaPlayer.create(this,R.raw.cutmefree);
 
         if(isPlaying == false)
@@ -96,6 +98,12 @@ public class MainMenu extends AppCompatActivity {
         upgrade4 = (Button) findViewById(R.id.upgrade4);
         upgrade4.setEnabled(false);
         upgrade4_text = (TextView) findViewById(R.id.cost_u4);
+
+        imageView.setVisibility(View.INVISIBLE);
+        imageView2.setVisibility(View.INVISIBLE);
+        imageView3.setVisibility(View.INVISIBLE);
+        imageView4.setVisibility(View.INVISIBLE);
+
         mps = getSavedMps();
         money = getSavedMoney();
         setUpgradeCount();
@@ -107,17 +115,9 @@ public class MainMenu extends AppCompatActivity {
             startMoneyUpdate();
         }
 
-        if(upgrade1_count >= 10.0){
-            imageView.setVisibility(View.VISIBLE);
-    } else {
-        imageView.setVisibility(View.INVISIBLE);
-    }
 
-        if(upgrade2_count >= 10.0){
-            imageView2.setVisibility(View.VISIBLE);
-        }else {
-            imageView2.setVisibility(View.INVISIBLE);
-        }
+
+
         ///==============Drawer settings=====================
         drawerLayout = findViewById(R.id.drawer_layout);
         navigationView = findViewById(R.id.nav_view);
@@ -247,10 +247,34 @@ public class MainMenu extends AppCompatActivity {
                 Toast.makeText(MainMenu.this, String.valueOf(upgrade4_count), Toast.LENGTH_SHORT).show();
             }
         });
+
+        if(upgrade1_count >= 10.0){
+            imageView.setVisibility(View.VISIBLE);
+        } else {
+            imageView.setVisibility(View.INVISIBLE);
+        }
+
+        if(upgrade2_count >= 10.0){
+            imageView2.setVisibility(View.VISIBLE);
+        } else {
+            imageView2.setVisibility(View.INVISIBLE);
+        }
+
+        if(upgrade3_count >= 10.0){
+            imageView3.setVisibility(View.VISIBLE);
+        } else {
+            imageView3.setVisibility(View.INVISIBLE);
+        }
+        if(upgrade4_count >= 10.0){
+            imageView4.setVisibility(View.VISIBLE);
+        } else {
+            imageView4.setVisibility(View.INVISIBLE);
+        }
+
     }
 
     ///==============Variables for methods below=====================
-    private static final long DELAY_TIME_UPGRADE = 100;
+    private static final long DELAY_TIME_UPGRADE = 10;
     private Handler handler = new Handler();
 
     ///==============Text animator=====================
@@ -258,7 +282,7 @@ public class MainMenu extends AppCompatActivity {
     {
         ValueAnimator increaseAnimator = ValueAnimator.ofFloat
                 (15, 16);
-        increaseAnimator.setDuration(50);
+        increaseAnimator.setDuration(1);
 
         increaseAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
             @Override
@@ -269,7 +293,7 @@ public class MainMenu extends AppCompatActivity {
         });
 
         ValueAnimator decreaseAnimator = ValueAnimator.ofFloat(16, 15);
-        decreaseAnimator.setDuration(50);
+        decreaseAnimator.setDuration(1);
 
         decreaseAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
             @Override
@@ -495,5 +519,7 @@ public class MainMenu extends AppCompatActivity {
         } else {
             upgrade4.setEnabled(false);
         }
+
+
     }
 }
