@@ -80,7 +80,7 @@ public class RaceMap extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getBaseContext(), RaceActivity.class);
-                intent.putExtra("Race1", "Race1");
+                intent.putExtra("Race", "Race1");
                 startActivity(intent);
             }
         });
@@ -89,7 +89,7 @@ public class RaceMap extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getBaseContext(), RaceActivity.class);
-                intent.putExtra("Race2", "Race2");
+                intent.putExtra("Race", "Race2");
                 startActivity(intent);
             }
         });
@@ -98,7 +98,7 @@ public class RaceMap extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getBaseContext(), RaceActivity.class);
-                intent.putExtra("Race3", "Race3");
+                intent.putExtra("Race", "Race3");
                 startActivity(intent);
             }
         });

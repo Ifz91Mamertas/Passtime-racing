@@ -97,6 +97,7 @@ public class MainMenu extends AppCompatActivity {
         updateMoneyText();
 
 
+
         if(!isUpgradeUpdating)
         {
             startMoneyUpdate();
@@ -464,25 +465,33 @@ public class MainMenu extends AppCompatActivity {
     }
 
     private void checkUpgradeButtons() {
+        SharedPreferences prefs = getSharedPreferences("Race1Results", MODE_PRIVATE);
+        int race1won = prefs.getInt(PREFS_KEY, 0);
+
+        prefs = getSharedPreferences("Race2Results", MODE_PRIVATE);
+        int race2won = prefs.getInt(PREFS_KEY, 0);
+
+        prefs = getSharedPreferences("Race3Results", MODE_PRIVATE);
+        int race3won = prefs.getInt(PREFS_KEY, 0);
         if (money >= upgrade1_cost) {
             upgrade1.setEnabled(true);
         } else {
             upgrade1.setEnabled(false);
         }
 
-        if (money >= upgrade2_cost) {
+        if (money >= upgrade2_cost && race1won == 1) {
             upgrade2.setEnabled(true);
         } else {
             upgrade2.setEnabled(false);
         }
 
-        if (money >= upgrade3_cost) {
+        if (money >= upgrade3_cost && race2won == 1) {
             upgrade3.setEnabled(true);
         } else {
             upgrade3.setEnabled(false);
         }
 
-        if (money >= upgrade4_cost) {
+        if (money >= upgrade4_cost && race3won == 1) {
             upgrade4.setEnabled(true);
         } else {
             upgrade4.setEnabled(false);
