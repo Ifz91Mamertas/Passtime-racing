@@ -59,6 +59,7 @@ public class MainMenu extends AppCompatActivity {
     Boolean isPlaying = false;
     boolean isUpgradeUpdating = false;
     private static final String PREFS_KEY = "money_value";
+    TextView infoText1, infoText2, infoText3;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -93,6 +94,9 @@ public class MainMenu extends AppCompatActivity {
         upgrade4_text = (TextView) findViewById(R.id.cost_u4);
         mps = getSavedMps();
         money = getSavedMoney();
+        infoText1 = (TextView) findViewById(R.id.infoText1);
+        infoText2 = (TextView) findViewById(R.id.infoText2);
+        infoText3 = (TextView) findViewById(R.id.infoText3);
         setUpgradeCount();
         updateMoneyText();
 
@@ -478,23 +482,34 @@ public class MainMenu extends AppCompatActivity {
         } else {
             upgrade1.setEnabled(false);
         }
-
-        if (money >= upgrade2_cost && race1won == 1) {
-            upgrade2.setEnabled(true);
-        } else {
-            upgrade2.setEnabled(false);
+        if(race1won == 1)
+        {
+            infoText1.setVisibility(View.GONE);
+            if (money >= upgrade2_cost) {
+                upgrade2.setEnabled(true);
+            } else {
+                upgrade2.setEnabled(false);
+            }
         }
 
-        if (money >= upgrade3_cost && race2won == 1) {
-            upgrade3.setEnabled(true);
-        } else {
-            upgrade3.setEnabled(false);
+        if(race2won == 1)
+        {
+            infoText2.setVisibility(View.GONE);
+            if (money >= upgrade3_cost ) {
+                upgrade3.setEnabled(true);
+            } else {
+                upgrade3.setEnabled(false);
+            }
         }
 
-        if (money >= upgrade4_cost && race3won == 1) {
-            upgrade4.setEnabled(true);
-        } else {
-            upgrade4.setEnabled(false);
+        if(race3won == 1)
+        {
+            infoText3.setVisibility(View.GONE);
+            if (money >= upgrade4_cost ) {
+                upgrade4.setEnabled(true);
+            } else {
+                upgrade4.setEnabled(false);
+            }
         }
     }
 }

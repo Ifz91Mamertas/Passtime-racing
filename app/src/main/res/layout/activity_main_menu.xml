@@ -26,6 +26,8 @@
                 android:background="@drawable/click"
 
                 />
+
+
         </LinearLayout>
 
         <TextView
@@ -39,6 +41,44 @@
             android:textStyle="bold"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/infoText3"
+            android:layout_width="130dp"
+            android:layout_height="73dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="50dp"
+            android:paddingRight="20dp"
+            android:textSize="14dp"
+            android:text="You need to win \nRace 3 to unlock \nRace sponsors!"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="@id/mps"
+            app:layout_constraintTop_toBottomOf="@id/mps" />
+        <TextView
+            android:id="@+id/infoText2"
+            android:layout_width="130dp"
+            android:layout_height="73dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="3dp"
+            android:paddingRight="20dp"
+            android:textSize="14dp"
+            android:text="You need to win \nRace 2 to unlock \nBody shops!"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="@id/infoText3"
+            app:layout_constraintTop_toBottomOf="@id/infoText3" />
+        <TextView
+            android:id="@+id/infoText1"
+            android:layout_width="130dp"
+            android:layout_height="90dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="3dp"
+            android:paddingRight="20dp"
+            android:textSize="14dp"
+            android:text="You need to win \nRace 1 to unlock \nMechanic workshops!"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="@id/infoText2"
+            app:layout_constraintTop_toBottomOf="@id/infoText2"
+            />
         <TextView
             android:id="@+id/moneyCount"
             android:layout_width="wrap_content"

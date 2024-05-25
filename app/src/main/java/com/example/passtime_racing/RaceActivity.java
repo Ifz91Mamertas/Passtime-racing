@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.CountDownTimer;
+import android.os.Handler;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -34,6 +35,7 @@ public class RaceActivity extends AppCompatActivity {
     double car_upgrade3_count;
     double car_upgrade4_count;
     private static final String PREFS_KEY = "money_value";
+    private Handler handler = new Handler();
     String race;
 
     @Override
@@ -108,7 +110,6 @@ public class RaceActivity extends AppCompatActivity {
 
             public void onFinish() {
                 countdownTextView.setVisibility(View.GONE);
-                button.setVisibility(View.VISIBLE);
                 float screenWidth = getResources().getDisplayMetrics().widthPixels;
 
                 animator1 = ObjectAnimator.ofFloat(imageView1, "translationX", 0f, screenWidth - 350f);
@@ -122,6 +123,7 @@ public class RaceActivity extends AppCompatActivity {
                     public void onAnimationEnd(Animator animation) {
                         if (animator2.isRunning()) {
                             onRaceEnd(true);
+                            stopButtonVisibilityCycle();
                         }
                     }
 
@@ -159,6 +161,7 @@ public class RaceActivity extends AppCompatActivity {
                     public void onAnimationEnd(Animator animation) {
                         if (animator1.isRunning()) {
                             onRaceEnd(false);
+                            stopButtonVisibilityCycle();
                         }
                     }
 
@@ -169,8 +172,38 @@ public class RaceActivity extends AppCompatActivity {
                     public void onAnimationRepeat(Animator animation) {}
                 });
                 animator2.start();
+                startButtonVisibilityCycle();
             }
         }.start();
+    }
+
+    private void stopButtonVisibilityCycle() {
+        handler.removeCallbacksAndMessages(null);
+    }
+
+    private void startButtonVisibilityCycle() {
+        final long interval = (long) (animationDuration * 1000 * 0.2); // 20% of animation duration in milliseconds
+
+        final Runnable visibilityRunnable = new Runnable() {
+            @Override
+            public void run() {
+                button.setVisibility(View.VISIBLE);
+                handler.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        button.setVisibility(View.GONE);
+                    }
+                }, 500); // Show button for 0.5 seconds
+
+                // Schedule the next cycle of button visibility
+                if (animator1.isRunning() || animator2.isRunning()) {
+                    handler.postDelayed(this, interval);
+                }
+            }
+        };
+
+        // Start the first cycle
+        handler.postDelayed(visibilityRunnable, interval);
     }
 
     private void reduceAnimationDuration() {
