@@ -149,14 +149,12 @@ public class MainMenu extends AppCompatActivity {
         clicker.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                money = money + (100 + upgrade1_count);
+                money = money + (1000 + upgrade1_count);
                 clickSound.start();
-                money = money + (1 + upgrade1_count);
                 updateMoneyText();
                 saveMoney();
                 updateUpgradeText();
                 checkUpgradeButtons();
-
             }
         });
 
@@ -459,6 +457,10 @@ public class MainMenu extends AppCompatActivity {
         handler.postDelayed(moneyUpdater_upgade4, DELAY_TIME_UPGRADE);
         isUpgradeUpdating = true;
         checkUpgradeButtons();
+        saveMoney();
+        saveMps();
+        saveUpgrades();
+        getSavedMps();
     }
 
     private void stopMoneyUpdate() {

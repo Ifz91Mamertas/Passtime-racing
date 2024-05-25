@@ -61,18 +61,10 @@ public class ProjectCar extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_project_car);
 
-        SharedPreferences prefs = getSharedPreferences("Money", MODE_PRIVATE);
-        money = Double.parseDouble(prefs.getString(PREFS_KEY, "0.0"));
+        money = getSavedMoney();
         SharedPreferences prefs2 = getSharedPreferences("MPS", MODE_PRIVATE);
         mps = Double.parseDouble(prefs2.getString(PREFS_KEY, "0.0"));
-        SharedPreferences prefs3 = getSharedPreferences("Upgrade1", MODE_PRIVATE);
-        upgrade1_count = Double.parseDouble(prefs3.getString(PREFS_KEY, "0.0"));
-        SharedPreferences prefs4 = getSharedPreferences("Upgrade2", MODE_PRIVATE);
-        upgrade2_count = Double.parseDouble(prefs4.getString(PREFS_KEY, "0.0"));
-        SharedPreferences prefs5 = getSharedPreferences("Upgrade3", MODE_PRIVATE);
-        upgrade3_count = Double.parseDouble(prefs5.getString(PREFS_KEY, "0.0"));
-        SharedPreferences prefs6 = getSharedPreferences("Upgrade4", MODE_PRIVATE);
-        upgrade4_count = Double.parseDouble(prefs6.getString(PREFS_KEY, "0.0"));
+
 
         moneyText = findViewById(R.id.moneyCount);
         car_upgrade1 = (Button) findViewById(R.id.car_upgrade1);
@@ -88,7 +80,7 @@ public class ProjectCar extends AppCompatActivity {
         rcu_text3 = findViewById(R.id.req_cu3);
         rcu_text4 = findViewById(R.id.req_cu4);
         car_time_text = findViewById(R.id.car_time);
-
+        setMainUpgradeCount();
         checkUpgradeButtons();
         moneyText.setText(String.format("Money: %.0f", money));
         setUpgradeCount();
@@ -341,11 +333,20 @@ public class ProjectCar extends AppCompatActivity {
         handler.postDelayed(moneyUpdater_upgade4, DELAY_TIME_UPGRADE);
         isUpgradeUpdating = true;
         checkUpgradeButtons();
+        saveMoney();
+        saveUpgrades();
+        setMainUpgradeCount();
+        saveUpgrades();
+        setUpgradeCount();
     }
 
     private void updateMoneyText() {
         moneyText.setText("Money: " + String.format("%.0f", money));
         saveMoney();
+        setMainUpgradeCount();
+        saveUpgrades();
+        setUpgradeCount();
+        checkUpgradeButtons();
     }
 
     private void saveMoney() {
@@ -356,79 +357,38 @@ public class ProjectCar extends AppCompatActivity {
     }
 
     private void checkUpgradeButtons() {
-        if (money >= car_upgrade1_cost) {
-            if (car_upgrade1_count == 0 ||
-                    (car_upgrade1_count == 1 && upgrade2_count == 10) ||
-                    (car_upgrade1_count == 2 && upgrade2_count == 20 && upgrade3_count == 2) ||
-                    (car_upgrade1_count == 3 && upgrade2_count == 40 && upgrade3_count == 5 && upgrade4_count == 2)) {
-                car_upgrade1.setEnabled(true);
-            }
-            else
-            {
-                car_upgrade1.setEnabled(false);
-            }
-        }
-        else
-        {
-            car_upgrade1.setEnabled(false);
-        }
+        car_upgrade1.setEnabled(money >= car_upgrade1_cost && canBuyUpgrade1());
+        car_upgrade2.setEnabled(money >= car_upgrade2_cost && canBuyUpgrade2());
+        car_upgrade3.setEnabled(money >= car_upgrade3_cost && canBuyUpgrade3());
+        car_upgrade4.setEnabled(money >= car_upgrade4_cost && canBuyUpgrade4());
+    }
 
-        if (money >= car_upgrade2_cost)
-        {
-            if  (car_upgrade2_count == 0 ||
-                (car_upgrade2_count == 1 && upgrade2_count == 25) ||
-                (car_upgrade2_count == 2 && upgrade3_count == 25) ||
-                (car_upgrade2_count == 3 && upgrade4_count == 25))
-            {
-                car_upgrade2.setEnabled(true);
-            }
-            else
-            {
-                car_upgrade2.setEnabled(false);
-            }
-        }
-        else
-        {
-            car_upgrade2.setEnabled(false);
-        }
+    private boolean canBuyUpgrade1() {
+        return car_upgrade1_count == 0 ||
+                (car_upgrade1_count == 1 && upgrade2_count >= 10) ||
+                (car_upgrade1_count == 2 && upgrade2_count >= 20 && upgrade3_count >= 2) ||
+                (car_upgrade1_count == 3 && upgrade2_count >= 40 && upgrade3_count >= 5 && upgrade4_count >= 2);
+    }
 
-        if (money >= car_upgrade3_cost)
-        {
-            if  (car_upgrade3_count == 0 ||
-                (car_upgrade3_count == 1 && upgrade1_count == 1) ||
-                (car_upgrade3_count == 2 && upgrade1_count == 2 && upgrade3_count == 3) ||
-                (car_upgrade3_count == 3 && upgrade1_count == 5 && upgrade2_count == 5 && upgrade3_count == 1))
-            {
-                car_upgrade3.setEnabled(true);
-            }
-            else
-            {
-                car_upgrade3.setEnabled(false);
-            }
-        }
-        else
-        {
-            car_upgrade3.setEnabled(false);
-        }
+    private boolean canBuyUpgrade2() {
+        return car_upgrade2_count == 0 ||
+                (car_upgrade2_count == 1 && upgrade2_count >= 25) ||
+                (car_upgrade2_count == 2 && upgrade3_count >= 25) ||
+                (car_upgrade2_count == 3 && upgrade4_count >= 25);
+    }
 
-        if (money >= car_upgrade4_cost)
-        {
-            if  ((car_upgrade4_count == 0 && upgrade2_count == 10)||
-                (car_upgrade4_count == 1 && upgrade2_count == 15 && upgrade3_count == 5) ||
-                (car_upgrade4_count == 2 && upgrade2_count == 25 && upgrade3_count == 10 && upgrade4_count == 1) ||
-                (car_upgrade4_count == 3 && upgrade2_count == 35 && upgrade3_count == 15 && upgrade4_count == 5))
-            {
-                car_upgrade4.setEnabled(true);
-            }
-            else
-            {
-                car_upgrade4.setEnabled(false);
-            }
-        }
-        else
-        {
-            car_upgrade4.setEnabled(false);
-        }
+    private boolean canBuyUpgrade3() {
+        return car_upgrade3_count == 0 ||
+                (car_upgrade3_count == 1 && upgrade1_count >= 1) ||
+                (car_upgrade3_count == 2 && upgrade1_count >= 2 && upgrade3_count >= 3) ||
+                (car_upgrade3_count == 3 && upgrade1_count >= 5 && upgrade2_count >= 5 && upgrade3_count >= 1);
+    }
+
+    private boolean canBuyUpgrade4() {
+        return (car_upgrade4_count == 0 && upgrade2_count >= 10)||
+                (car_upgrade4_count == 1 && upgrade2_count >= 15 && upgrade3_count >= 5) ||
+                (car_upgrade4_count == 2 && upgrade2_count >= 25 && upgrade3_count >= 10 && upgrade4_count >= 1) ||
+                (car_upgrade4_count == 3 && upgrade2_count >= 35 && upgrade3_count >= 15 && upgrade4_count >= 5);
     }
 
     private void changeUpgrade1() {
@@ -533,8 +493,31 @@ public class ProjectCar extends AppCompatActivity {
 
     private void setCarTime()
     {
-        car_time = 15f - (0.2f * car_upgrade1_count) - (0.15f * car_upgrade2_count)
-                - (0.05f * car_upgrade3_count) - (0.1f * car_upgrade4_count);
+        car_time = 15f - (0.5f * car_upgrade1_count) - (0.15f * car_upgrade2_count)
+                - (0.05f * car_upgrade3_count) - (0.2f * car_upgrade4_count);
         car_time_text.setText(String.format("Current 1/4 mile time:\n%.2f seconds", car_time));
+    }
+
+    private double getSavedMoney() {
+        SharedPreferences prefs = getSharedPreferences("Money", MODE_PRIVATE);
+        String savedMoneyString = prefs.getString(PREFS_KEY, "0.0");
+        return Double.parseDouble(savedMoneyString);
+    }
+
+    public void setMainUpgradeCount()
+    {
+        SharedPreferences prefs1 = getSharedPreferences("Upgrade1", MODE_PRIVATE);
+        upgrade1_count = Double.parseDouble(prefs1.getString(PREFS_KEY, "0.0"));
+
+        SharedPreferences prefs2 = getSharedPreferences("Upgrade2", MODE_PRIVATE);
+        upgrade2_count = Double.parseDouble(prefs2.getString(PREFS_KEY, "0.0"));
+
+        SharedPreferences prefs3 = getSharedPreferences("Upgrade3", MODE_PRIVATE);
+        upgrade3_count = Double.parseDouble(prefs3.getString(PREFS_KEY, "0.0"));
+
+        SharedPreferences prefs4 = getSharedPreferences("Upgrade4", MODE_PRIVATE);
+        upgrade4_count = Double.parseDouble(prefs4.getString(PREFS_KEY, "0.0"));
+
+        updateUpgradeText();
     }
 }

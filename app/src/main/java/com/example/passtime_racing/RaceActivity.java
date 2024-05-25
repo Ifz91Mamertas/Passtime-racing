@@ -26,7 +26,7 @@ public class RaceActivity extends AppCompatActivity {
     private float animationDuration;
     private float racer1 = 16.00f;
     private float racer2 = 12.55f;
-    private float racer3 = 9.00f;
+    private float racer3 = 11.00f;
     private ObjectAnimator animator1, animator2;
     private TextView countdownTextView;
 
