@@ -8,14 +8,28 @@
     tools:context=".RaceActivity">
 
     <ImageView
+        android:id="@+id/imageView3"
+        android:layout_width="410dp"
+        android:layout_height="800dp"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="0dp"
+        android:layout_marginLeft="0dp"
+        android:src="@drawable/chevy_nova"
+        android:scaleY="2.7"
+        android:alpha=".3"/>
+
+    <ImageView
         android:id="@+id/imageView1"
         android:layout_width="100dp"
         android:layout_height="50dp"
         android:layout_alignParentTop="true"
         android:layout_marginTop="250dp"
         android:layout_marginLeft="10dp"
-        android:src="@drawable/car"
+        android:src="@drawable/car2"
         android:scaleX="-1"/>
+
+
+
 
     <ImageView
         android:id="@+id/imageView2"
