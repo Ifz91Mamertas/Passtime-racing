@@ -7,6 +7,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.ImageView;
 
 import androidx.activity.EdgeToEdge;
 import androidx.annotation.NonNull;
@@ -34,10 +35,12 @@ public class ProjectCar extends AppCompatActivity {
     double car_upgrade2_cost;
     double car_upgrade3_cost;
     double car_upgrade4_cost;
+    double car_upgrade5_cost;
     Button car_upgrade1;
     Button car_upgrade2;
     Button car_upgrade3;
     Button car_upgrade4;
+    Button button2;
     TextView cu_text1;
     TextView cu_text2;
     TextView cu_text3;
@@ -46,14 +49,17 @@ public class ProjectCar extends AppCompatActivity {
     TextView rcu_text2;
     TextView rcu_text3;
     TextView rcu_text4;
+    ImageView car_image;
     double upgrade1_count;
     double upgrade2_count;
     double upgrade3_count;
     double upgrade4_count;
+    double upgrade5_count;
     double car_upgrade1_count;
     double car_upgrade2_count;
     double car_upgrade3_count;
     double car_upgrade4_count;
+    double car_upgrade5_count;
     TextView moneyText;
     private static final String PREFS_KEY = "money_value";
     @Override
@@ -71,6 +77,7 @@ public class ProjectCar extends AppCompatActivity {
         car_upgrade2 = (Button) findViewById(R.id.car_upgrade2);
         car_upgrade3 = (Button) findViewById(R.id.car_upgrade3);
         car_upgrade4 = (Button) findViewById(R.id.car_upgrade4);
+        button2 = (Button) findViewById(R.id.button2);
         cu_text1 = findViewById(R.id.cost_cu1);
         cu_text2 = findViewById(R.id.cost_cu2);
         cu_text3 = findViewById(R.id.cost_cu3);
@@ -79,6 +86,7 @@ public class ProjectCar extends AppCompatActivity {
         rcu_text2 = findViewById(R.id.req_cu2);
         rcu_text3 = findViewById(R.id.req_cu3);
         rcu_text4 = findViewById(R.id.req_cu4);
+        car_image = findViewById(R.id.project_car);
         car_time_text = findViewById(R.id.car_time);
         setMainUpgradeCount();
         checkUpgradeButtons();
@@ -162,6 +170,18 @@ public class ProjectCar extends AppCompatActivity {
                 setCarTime();
 
                 Toast.makeText(ProjectCar.this, String.valueOf(car_upgrade4_count), Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        button2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                money = money - car_upgrade5_cost;
+                car_upgrade5_count = car_upgrade5_count + 1;
+                updateMoneyText();
+                saveMoney();
+                saveUpgrades();
+                changeUpgrade5();
             }
         });
 
@@ -249,6 +269,11 @@ public class ProjectCar extends AppCompatActivity {
         SharedPreferences.Editor editor4 = prefs4.edit();
         editor4.putString(PREFS_KEY, String.valueOf(car_upgrade4_count));
         editor4.apply();
+
+        SharedPreferences prefs5 = getSharedPreferences("Car_Upgrade5", MODE_PRIVATE);
+        SharedPreferences.Editor editor5 = prefs5.edit();
+        editor5.putString(PREFS_KEY, String.valueOf(car_upgrade5_count));
+        editor5.apply();
     }
 
     public void setUpgradeCount()
@@ -268,6 +293,10 @@ public class ProjectCar extends AppCompatActivity {
         SharedPreferences prefs4 = getSharedPreferences("Car_Upgrade4", MODE_PRIVATE);
         car_upgrade4_count = Double.parseDouble(prefs4.getString(PREFS_KEY, "0.0"));
         changeUpgrade4();
+
+        SharedPreferences prefs5 = getSharedPreferences("Button2", MODE_PRIVATE);
+        car_upgrade5_count = Double.parseDouble(prefs5.getString(PREFS_KEY, "0.0"));
+        changeUpgrade5();
 
         updateUpgradeText();
     }
@@ -320,6 +349,18 @@ public class ProjectCar extends AppCompatActivity {
         public void run() {
             if (upgrade4_count >= 1) {
                 money += 0.3 * upgrade4_count;
+                updateMoneyText();
+                checkUpgradeButtons();
+            }
+            handler.postDelayed(this, DELAY_TIME_UPGRADE);
+        }
+    };
+
+    private Runnable moneyUpdater_upgade5 = new Runnable() {
+        @Override
+        public void run() {
+            if (upgrade5_count >= 1) {
+                money += 0.3 * upgrade5_count;
                 updateMoneyText();
                 checkUpgradeButtons();
             }
@@ -491,12 +532,38 @@ public class ProjectCar extends AppCompatActivity {
         }
     }
 
+    private void changeUpgrade5() {
+        switch ((int) car_upgrade5_count) {
+            case 0:
+                car_upgrade5_cost = 0;
+                car_image.setImageResource(R.drawable.car1);
+                break;
+            case 1:
+                car_upgrade5_cost = 500;
+                car_image.setImageResource(R.drawable.car2);
+                break;
+            case 2:
+                car_upgrade5_cost = 5000;
+                car_image.setImageResource(R.drawable.car);
+                break;
+            case 3:
+                car_upgrade5_cost = 30000;
+                car_image.setImageResource(R.drawable.car1);
+                break;
+            default:
+                car_upgrade5_cost = 0;
+                car_image.setImageResource(R.drawable.car);
+                break;
+        }
+    }
+
     private void setCarTime()
     {
         car_time = 15f - (0.5f * car_upgrade1_count) - (0.15f * car_upgrade2_count)
                 - (0.05f * car_upgrade3_count) - (0.2f * car_upgrade4_count);
         car_time_text.setText(String.format("Current 1/4 mile time:\n%.2f seconds", car_time));
     }
+
 
     private double getSavedMoney() {
         SharedPreferences prefs = getSharedPreferences("Money", MODE_PRIVATE);
@@ -517,6 +584,9 @@ public class ProjectCar extends AppCompatActivity {
 
         SharedPreferences prefs4 = getSharedPreferences("Upgrade4", MODE_PRIVATE);
         upgrade4_count = Double.parseDouble(prefs4.getString(PREFS_KEY, "0.0"));
+
+        SharedPreferences prefs5 = getSharedPreferences("Upgrade5", MODE_PRIVATE);
+        upgrade5_count = Double.parseDouble(prefs5.getString(PREFS_KEY, "0.0"));
 
         updateUpgradeText();
     }

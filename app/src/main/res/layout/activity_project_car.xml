@@ -17,11 +17,15 @@
             android:layout_height="match_parent"
             android:gravity="center"
             android:orientation="vertical">
+
+
             <ImageView
                 android:id="@+id/project_car"
                 android:layout_height="250dp"
                 android:layout_width="350dp"
                 app:srcCompat="@drawable/car"/>
+
+
         </LinearLayout>
 
         <Button
@@ -132,6 +136,7 @@
             app:layout_constraintEnd_toEndOf="@id/cost_cu3"
             android:gravity="center"/>
 
+
         <Button
             android:id="@+id/car_upgrade4"
             android:layout_width="90dp"
@@ -182,6 +187,18 @@
             app:layout_constraintTop_toTopOf="parent"
             android:gravity="center"/>
 
+        <Button
+            android:id="@+id/button2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/button_background_selector"
+            android:layout_marginStart="150dp"
+            android:layout_marginTop="200dp"
+            android:gravity="center"
+            android:text="Car collor"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
         <TextView
             android:id="@+id/moneyCount"
             android:layout_width="wrap_content"
