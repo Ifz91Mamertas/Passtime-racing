@@ -67,6 +67,7 @@ public class MainMenu extends AppCompatActivity {
     Boolean isPlaying = false;
     boolean isUpgradeUpdating = false;
     private static final String PREFS_KEY = "money_value";
+    TextView infoText1, infoText2, infoText3;
 
 
 
@@ -82,6 +83,8 @@ public class MainMenu extends AppCompatActivity {
         ///==============Music player=====================
 
         MediaPlayer mediaPlayer = MediaPlayer.create(this,R.raw.cutmefree);
+        MediaPlayer upgradeSound = MediaPlayer.create(this,R.raw.upgrade);
+        MediaPlayer clickSound = MediaPlayer.create(this,R.raw.clicker);
 
         if(isPlaying == false)
         {
@@ -112,8 +115,12 @@ public class MainMenu extends AppCompatActivity {
 
         mps = getSavedMps();
         money = getSavedMoney();
+        infoText1 = (TextView) findViewById(R.id.infoText1);
+        infoText2 = (TextView) findViewById(R.id.infoText2);
+        infoText3 = (TextView) findViewById(R.id.infoText3);
         setUpgradeCount();
         updateMoneyText();
+
 
 
         if(!isUpgradeUpdating)
@@ -152,6 +159,11 @@ public class MainMenu extends AppCompatActivity {
                     Intent intent = new Intent(getBaseContext(), ProjectCar.class);
                     startActivity(intent);
                 }
+                if(item.getItemId() == R.id.action_racemap)
+                {
+                    Intent intent = new Intent(getBaseContext(), RaceMap.class);
+                    startActivity(intent);
+                }
 
                 return false;
             }
@@ -161,7 +173,8 @@ public class MainMenu extends AppCompatActivity {
         clicker.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                money = money + (100 + upgrade1_count);
+                money = money + (1000 + upgrade1_count);
+                clickSound.start();
                 updateMoneyText();
                 saveMoney();
                 updateUpgradeText();
@@ -180,7 +193,7 @@ public class MainMenu extends AppCompatActivity {
                 updateUpgradeText();
                 checkUpgradeButtons();
                 textAnimation(upgrade1_text);
-
+                upgradeSound.start();
                 Toast.makeText(MainMenu.this, String.valueOf(upgrade1_count), Toast.LENGTH_SHORT).show();
             }
         });
@@ -203,7 +216,7 @@ public class MainMenu extends AppCompatActivity {
                     stopMoneyUpdate();
                     startMoneyUpdate();
                 }
-
+                upgradeSound.start();
                 Toast.makeText(MainMenu.this, String.valueOf(upgrade2_count), Toast.LENGTH_SHORT).show();
             }
         });
@@ -226,7 +239,7 @@ public class MainMenu extends AppCompatActivity {
                     stopMoneyUpdate();
                     startMoneyUpdate();
                 }
-
+                upgradeSound.start();
                 Toast.makeText(MainMenu.this, String.valueOf(upgrade3_count), Toast.LENGTH_SHORT).show();
             }
         });
@@ -249,7 +262,7 @@ public class MainMenu extends AppCompatActivity {
                     stopMoneyUpdate();
                     startMoneyUpdate();
                 }
-
+                upgradeSound.start();
                 Toast.makeText(MainMenu.this, String.valueOf(upgrade4_count), Toast.LENGTH_SHORT).show();
             }
         });
@@ -495,6 +508,10 @@ public class MainMenu extends AppCompatActivity {
         handler.postDelayed(moneyUpdater_upgade4, DELAY_TIME_UPGRADE);
         isUpgradeUpdating = true;
         checkUpgradeButtons();
+        saveMoney();
+        saveMps();
+        saveUpgrades();
+        getSavedMps();
     }
 
     private void stopMoneyUpdate() {
@@ -505,28 +522,47 @@ public class MainMenu extends AppCompatActivity {
     }
 
     private void checkUpgradeButtons() {
+        SharedPreferences prefs = getSharedPreferences("Race1Results", MODE_PRIVATE);
+        int race1won = prefs.getInt(PREFS_KEY, 0);
+
+        prefs = getSharedPreferences("Race2Results", MODE_PRIVATE);
+        int race2won = prefs.getInt(PREFS_KEY, 0);
+
+        prefs = getSharedPreferences("Race3Results", MODE_PRIVATE);
+        int race3won = prefs.getInt(PREFS_KEY, 0);
         if (money >= upgrade1_cost) {
             upgrade1.setEnabled(true);
         } else {
             upgrade1.setEnabled(false);
         }
-
-        if (money >= upgrade2_cost) {
-            upgrade2.setEnabled(true);
-        } else {
-            upgrade2.setEnabled(false);
+        if(race1won == 1)
+        {
+            infoText1.setVisibility(View.GONE);
+            if (money >= upgrade2_cost) {
+                upgrade2.setEnabled(true);
+            } else {
+                upgrade2.setEnabled(false);
+            }
         }
 
-        if (money >= upgrade3_cost) {
-            upgrade3.setEnabled(true);
-        } else {
-            upgrade3.setEnabled(false);
+        if(race2won == 1)
+        {
+            infoText2.setVisibility(View.GONE);
+            if (money >= upgrade3_cost ) {
+                upgrade3.setEnabled(true);
+            } else {
+                upgrade3.setEnabled(false);
+            }
         }
 
-        if (money >= upgrade4_cost) {
-            upgrade4.setEnabled(true);
-        } else {
-            upgrade4.setEnabled(false);
+        if(race3won == 1)
+        {
+            infoText3.setVisibility(View.GONE);
+            if (money >= upgrade4_cost ) {
+                upgrade4.setEnabled(true);
+            } else {
+                upgrade4.setEnabled(false);
+            }
         }
 
 
