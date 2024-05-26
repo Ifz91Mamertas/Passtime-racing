@@ -14,8 +14,9 @@
         android:layout_alignParentTop="true"
         android:layout_marginTop="0dp"
         android:layout_marginLeft="0dp"
-        android:src="@drawable/images"
-        android:scaleY="2.4"
+        android:src="@drawable/dragrace"
+        android:scaleY="1"
+        android:scaleX="-1"
         android:alpha=".3"/>
 
     <ImageView
