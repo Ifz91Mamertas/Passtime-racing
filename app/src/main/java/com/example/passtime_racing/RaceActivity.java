@@ -112,7 +112,7 @@ public class RaceActivity extends AppCompatActivity {
                 countdownTextView.setVisibility(View.GONE);
                 float screenWidth = getResources().getDisplayMetrics().widthPixels;
 
-                animator1 = ObjectAnimator.ofFloat(imageView1, "translationX", 0f, screenWidth - 350f);
+                animator1 = ObjectAnimator.ofFloat(imageView1, "translationX", 0f, screenWidth - 380f);
                 animator1.setDuration((long) (animationDuration * 1000));
                 animator1.setRepeatCount(0);
                 animator1.addListener(new Animator.AnimatorListener() {
@@ -150,7 +150,7 @@ public class RaceActivity extends AppCompatActivity {
                     racer2timer = racer3;
                 }
                 Toast.makeText(RaceActivity.this, "Racer2time: " + racer2timer, Toast.LENGTH_SHORT).show();
-                animator2 = ObjectAnimator.ofFloat(imageView2, "translationX", 0f, screenWidth - 350f);
+                animator2 = ObjectAnimator.ofFloat(imageView2, "translationX", 0f, screenWidth - 380f);
                 animator2.setDuration((long) (racer2timer * 1000));
                 animator2.setRepeatCount(0);
                 animator2.addListener(new Animator.AnimatorListener() {

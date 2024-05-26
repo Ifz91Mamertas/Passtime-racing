@@ -5,7 +5,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:id="@+id/drawer_layout"
-    tools:context=".ProjectCar">
+    tools:context=".ProjectCar"
+    android:background="@drawable/background_projectcar">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
@@ -46,7 +47,8 @@
             android:text="Cost: -"
             app:layout_constraintTop_toBottomOf="@id/car_upgrade1"
             app:layout_constraintStart_toStartOf="@id/car_upgrade1"
-            app:layout_constraintEnd_toEndOf="@id/car_upgrade1" />
+            app:layout_constraintEnd_toEndOf="@id/car_upgrade1"
+            android:textColor="@color/black"/>
         <TextView
             android:id="@+id/req_cu1"
             android:layout_width="wrap_content"
@@ -57,7 +59,8 @@
             app:layout_constraintTop_toBottomOf="@id/cost_cu1"
             app:layout_constraintStart_toStartOf="@id/cost_cu1"
             app:layout_constraintEnd_toEndOf="@id/cost_cu1"
-            android:gravity="center"/>
+            android:gravity="center"
+            android:textColor="@color/black"/>
 
         <Button
             android:id="@+id/car_upgrade2"
@@ -71,7 +74,8 @@
             android:textSize="10sp"
             app:layout_constraintStart_toEndOf="@id/car_upgrade1"
             app:layout_constraintEnd_toStartOf="@id/car_upgrade3"
-            app:layout_constraintBottom_toBottomOf="parent"/>
+            app:layout_constraintBottom_toBottomOf="parent"
+            />
         <TextView
             android:id="@+id/cost_cu2"
             android:layout_width="wrap_content"
@@ -82,7 +86,8 @@
             android:text="Cost: -"
             app:layout_constraintTop_toBottomOf="@id/car_upgrade2"
             app:layout_constraintStart_toStartOf="@id/car_upgrade2"
-            app:layout_constraintEnd_toEndOf="@id/car_upgrade2" />
+            app:layout_constraintEnd_toEndOf="@id/car_upgrade2"
+            android:textColor="@color/black"/>
         <TextView
             android:id="@+id/req_cu2"
             android:layout_width="wrap_content"
@@ -94,6 +99,7 @@
             app:layout_constraintStart_toStartOf="@id/cost_cu2"
             app:layout_constraintEnd_toEndOf="@id/cost_cu2"
             android:gravity="center"
+            android:textColor="@color/black"
             />
 
         <Button
@@ -119,7 +125,8 @@
             android:text="Cost: -"
             app:layout_constraintTop_toBottomOf="@id/car_upgrade3"
             app:layout_constraintStart_toStartOf="@id/car_upgrade3"
-            app:layout_constraintEnd_toEndOf="@id/car_upgrade3" />
+            app:layout_constraintEnd_toEndOf="@id/car_upgrade3"
+            android:textColor="@color/black"/>
         <TextView
             android:id="@+id/req_cu3"
             android:layout_width="wrap_content"
@@ -130,7 +137,8 @@
             app:layout_constraintTop_toBottomOf="@id/cost_cu3"
             app:layout_constraintStart_toStartOf="@id/cost_cu3"
             app:layout_constraintEnd_toEndOf="@id/cost_cu3"
-            android:gravity="center"/>
+            android:gravity="center"
+            android:textColor="@color/black"/>
 
         <Button
             android:id="@+id/car_upgrade4"
@@ -154,7 +162,8 @@
             android:text="Cost: -"
             app:layout_constraintTop_toBottomOf="@id/car_upgrade4"
             app:layout_constraintStart_toStartOf="@id/car_upgrade4"
-            app:layout_constraintEnd_toEndOf="@id/car_upgrade4" />
+            app:layout_constraintEnd_toEndOf="@id/car_upgrade4"
+            android:textColor="@color/black"/>
         <TextView
             android:id="@+id/req_cu4"
             android:layout_width="wrap_content"
@@ -165,7 +174,8 @@
             app:layout_constraintTop_toBottomOf="@id/cost_cu4"
             app:layout_constraintStart_toStartOf="@id/cost_cu4"
             app:layout_constraintEnd_toEndOf="@id/cost_cu4"
-            android:gravity="center"/>
+            android:gravity="center"
+            android:textColor="@color/black"/>
 
         <TextView
             android:id="@+id/car_time"
