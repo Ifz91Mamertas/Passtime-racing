@@ -186,7 +186,7 @@ public class ProjectCar extends AppCompatActivity {
                 updateMoneyText();
                 saveMoney();
                 saveUpgrades();
-                //changeUpgrade5();
+                changeUpgrade5();
                 car_image.setImageResource(carImages[car_upgrade5_count]);
 
                // Log.d("ProjectCar", "New image index: " + car_upgrade5_count);
@@ -541,7 +541,7 @@ public class ProjectCar extends AppCompatActivity {
         }
     }
 
-   /* private void changeUpgrade5() {
+    private void changeUpgrade5() {
         switch ((int) car_upgrade5_count) {
             case 0:
                 car_upgrade5_cost = 0;
@@ -564,7 +564,7 @@ public class ProjectCar extends AppCompatActivity {
                 car_image.setImageResource(R.drawable.car);
                 break;
         }
-    }*/
+    }
 
     private void setCarTime()
     {
