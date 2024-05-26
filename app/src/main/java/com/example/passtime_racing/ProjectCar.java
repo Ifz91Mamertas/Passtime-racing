@@ -3,6 +3,7 @@ package com.example.passtime_racing;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
@@ -59,9 +60,10 @@ public class ProjectCar extends AppCompatActivity {
     double car_upgrade2_count;
     double car_upgrade3_count;
     double car_upgrade4_count;
-    double car_upgrade5_count;
+    int car_upgrade5_count;
     TextView moneyText;
     private static final String PREFS_KEY = "money_value";
+    private int[] carImages = {R.drawable.car, R.drawable.car1, R.drawable.car2};
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -77,7 +79,7 @@ public class ProjectCar extends AppCompatActivity {
         car_upgrade2 = (Button) findViewById(R.id.car_upgrade2);
         car_upgrade3 = (Button) findViewById(R.id.car_upgrade3);
         car_upgrade4 = (Button) findViewById(R.id.car_upgrade4);
-        button2 = (Button) findViewById(R.id.button2);
+        button2 = findViewById(R.id.button2);
         cu_text1 = findViewById(R.id.cost_cu1);
         cu_text2 = findViewById(R.id.cost_cu2);
         cu_text3 = findViewById(R.id.cost_cu3);
@@ -88,6 +90,7 @@ public class ProjectCar extends AppCompatActivity {
         rcu_text4 = findViewById(R.id.req_cu4);
         car_image = findViewById(R.id.project_car);
         car_time_text = findViewById(R.id.car_time);
+
         setMainUpgradeCount();
         checkUpgradeButtons();
         moneyText.setText(String.format("Money: %.0f", money));
@@ -172,16 +175,21 @@ public class ProjectCar extends AppCompatActivity {
                 Toast.makeText(ProjectCar.this, String.valueOf(car_upgrade4_count), Toast.LENGTH_SHORT).show();
             }
         });
-
+        Log.d("ProjectCar", "ImageView and Button initalized");
         button2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Log.d("ProjectCar", "Button clicked, current image index: " + car_upgrade5_count);
                 money = money - car_upgrade5_cost;
-                car_upgrade5_count = car_upgrade5_count + 1;
+                car_upgrade5_count = (car_upgrade5_count + 1) % carImages.length;
+                Log.d("ProjectCar", "Button clicked, current image index after increment: " + car_upgrade5_count);
                 updateMoneyText();
                 saveMoney();
                 saveUpgrades();
-                changeUpgrade5();
+                //changeUpgrade5();
+                car_image.setImageResource(carImages[car_upgrade5_count]);
+
+                Log.d("ProjectCar", "New image index: " + car_upgrade5_count);
             }
         });
 
@@ -270,7 +278,7 @@ public class ProjectCar extends AppCompatActivity {
         editor4.putString(PREFS_KEY, String.valueOf(car_upgrade4_count));
         editor4.apply();
 
-        SharedPreferences prefs5 = getSharedPreferences("Car_Upgrade5", MODE_PRIVATE);
+        SharedPreferences prefs5 = getSharedPreferences("Button2", MODE_PRIVATE);
         SharedPreferences.Editor editor5 = prefs5.edit();
         editor5.putString(PREFS_KEY, String.valueOf(car_upgrade5_count));
         editor5.apply();
@@ -295,8 +303,8 @@ public class ProjectCar extends AppCompatActivity {
         changeUpgrade4();
 
         SharedPreferences prefs5 = getSharedPreferences("Button2", MODE_PRIVATE);
-        car_upgrade5_count = Double.parseDouble(prefs5.getString(PREFS_KEY, "0.0"));
-        changeUpgrade5();
+        car_upgrade5_count = Integer.parseInt(prefs5.getString(PREFS_KEY, "0"));
+        //changeUpgrade5();
 
         updateUpgradeText();
     }
@@ -402,6 +410,7 @@ public class ProjectCar extends AppCompatActivity {
         car_upgrade2.setEnabled(money >= car_upgrade2_cost && canBuyUpgrade2());
         car_upgrade3.setEnabled(money >= car_upgrade3_cost && canBuyUpgrade3());
         car_upgrade4.setEnabled(money >= car_upgrade4_cost && canBuyUpgrade4());
+        button2.setEnabled(money >= car_upgrade5_cost);
     }
 
     private boolean canBuyUpgrade1() {
@@ -532,30 +541,30 @@ public class ProjectCar extends AppCompatActivity {
         }
     }
 
-    private void changeUpgrade5() {
+   /* private void changeUpgrade5() {
         switch ((int) car_upgrade5_count) {
             case 0:
                 car_upgrade5_cost = 0;
-                car_image.setImageResource(R.drawable.car1);
+                car_image.setImageResource(R.drawable.car);
                 break;
             case 1:
                 car_upgrade5_cost = 500;
-                car_image.setImageResource(R.drawable.car2);
+                car_image.setImageResource(R.drawable.car1);
                 break;
             case 2:
                 car_upgrade5_cost = 5000;
-                car_image.setImageResource(R.drawable.car);
+                car_image.setImageResource(R.drawable.car2);
                 break;
             case 3:
                 car_upgrade5_cost = 30000;
-                car_image.setImageResource(R.drawable.car1);
+                car_image.setImageResource(R.drawable.car);
                 break;
             default:
                 car_upgrade5_cost = 0;
                 car_image.setImageResource(R.drawable.car);
                 break;
         }
-    }
+    }*/
 
     private void setCarTime()
     {
@@ -585,7 +594,7 @@ public class ProjectCar extends AppCompatActivity {
         SharedPreferences prefs4 = getSharedPreferences("Upgrade4", MODE_PRIVATE);
         upgrade4_count = Double.parseDouble(prefs4.getString(PREFS_KEY, "0.0"));
 
-        SharedPreferences prefs5 = getSharedPreferences("Upgrade5", MODE_PRIVATE);
+        SharedPreferences prefs5 = getSharedPreferences("Button2", MODE_PRIVATE);
         upgrade5_count = Double.parseDouble(prefs5.getString(PREFS_KEY, "0.0"));
 
         updateUpgradeText();
