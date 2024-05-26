@@ -14,8 +14,8 @@
         android:layout_alignParentTop="true"
         android:layout_marginTop="0dp"
         android:layout_marginLeft="0dp"
-        android:src="@drawable/chevy_nova"
-        android:scaleY="2.7"
+        android:src="@drawable/images"
+        android:scaleY="2.4"
         android:alpha=".3"/>
 
     <ImageView
