@@ -179,17 +179,17 @@ public class ProjectCar extends AppCompatActivity {
         button2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.d("ProjectCar", "Button clicked, current image index: " + car_upgrade5_count);
+               // Log.d("ProjectCar", "Button clicked, current image index: " + car_upgrade5_count);
                 money = money - car_upgrade5_cost;
                 car_upgrade5_count = (car_upgrade5_count + 1) % carImages.length;
-                Log.d("ProjectCar", "Button clicked, current image index after increment: " + car_upgrade5_count);
+                //Log.d("ProjectCar", "Button clicked, current image index after increment: " + car_upgrade5_count);
                 updateMoneyText();
                 saveMoney();
                 saveUpgrades();
                 //changeUpgrade5();
                 car_image.setImageResource(carImages[car_upgrade5_count]);
 
-                Log.d("ProjectCar", "New image index: " + car_upgrade5_count);
+               // Log.d("ProjectCar", "New image index: " + car_upgrade5_count);
             }
         });
 
