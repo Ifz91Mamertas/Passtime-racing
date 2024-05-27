@@ -4,6 +4,7 @@ import android.animation.Animator;
 import android.animation.ObjectAnimator;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.os.Handler;
@@ -13,23 +14,19 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
 
 public class RaceActivity extends AppCompatActivity {
 
     private ImageView imageView1, imageView2;
-    private Button button, raceMapButton;
+    private Button button, raceMapButton, startButton;
     private float animationDuration;
     private float racer1 = 16.00f;
     private float racer2 = 12.55f;
     private float racer3 = 11.00f;
     private ObjectAnimator animator1, animator2;
     private TextView countdownTextView;
-
+    private boolean isCountdownActive = true;
     double car_upgrade1_count;
     double car_upgrade2_count;
     double car_upgrade3_count;
@@ -37,6 +34,7 @@ public class RaceActivity extends AppCompatActivity {
     private static final String PREFS_KEY = "money_value";
     private Handler handler = new Handler();
     String race;
+    CountDownTimer countDownTimer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,6 +44,7 @@ public class RaceActivity extends AppCompatActivity {
         imageView1 = findViewById(R.id.imageView1);
         imageView2 = findViewById(R.id.imageView2);
         button = findViewById(R.id.button);
+        startButton = findViewById(R.id.startButton);
         raceMapButton = findViewById(R.id.map_button);
         countdownTextView = findViewById(R.id.countdownTextView);
         setUpgradeCount();
@@ -70,16 +69,26 @@ public class RaceActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+
+        startButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (isCountdownActive) {
+                    disqualifiedCheck();
+                    countDownTimer.cancel();
+                } else {
+                    startAnimationsAfterCountdown();
+                }
+            }
+        });
     }
 
-    private void setCarTime()
-    {
+    private void setCarTime() {
         animationDuration = (float) (15f - (0.2f * car_upgrade1_count) - (0.15f * car_upgrade2_count)
-                        - (0.05f * car_upgrade3_count) - (0.1f * car_upgrade4_count));
+                - (0.05f * car_upgrade3_count) - (0.1f * car_upgrade4_count));
     }
 
-    public void setUpgradeCount()
-    {
+    public void setUpgradeCount() {
         SharedPreferences prefs1 = getSharedPreferences("Car_Upgrade1", MODE_PRIVATE);
         car_upgrade1_count = Double.parseDouble(prefs1.getString(PREFS_KEY, "0.0"));
 
@@ -96,85 +105,110 @@ public class RaceActivity extends AppCompatActivity {
     private void startAnimations() {
         countdownTextView.setVisibility(View.VISIBLE);
         button.setVisibility(View.GONE);
-        new CountDownTimer(5000, 1000)
-        {
+         countDownTimer = new CountDownTimer(5000, 1000) {
             public void onTick(long millisUntilFinished) {
                 int secondsLeft = (int) (millisUntilFinished / 1000);
-                if (secondsLeft > 1) {
-                    countdownTextView.setText(String.valueOf(secondsLeft - 1));
+                if (secondsLeft > 1)
+                {
+                    if(secondsLeft > 2)
+                    {
+                        countdownTextView.setTextColor(Color.RED);
+                        countdownTextView.setText(String.valueOf(secondsLeft - 1));
+                    }
+                    else
+                    {
+                        countdownTextView.setText(String.valueOf(secondsLeft - 1));
+                        countdownTextView.setTextColor(Color.YELLOW);
+
+                    }
+                    countdownTextView.invalidate();
+
                 }
-                else if (secondsLeft == 1) {
+                else if (secondsLeft == 0) {
                     countdownTextView.setText("GO!");
+                    isCountdownActive = false;
+                    countdownTextView.setTextColor(Color.GREEN);
                 }
+
+
             }
 
             public void onFinish() {
                 countdownTextView.setVisibility(View.GONE);
-                float screenWidth = getResources().getDisplayMetrics().widthPixels;
-
-                animator1 = ObjectAnimator.ofFloat(imageView1, "translationX", 0f, screenWidth - 380f);
-                animator1.setDuration((long) (animationDuration * 1000));
-                animator1.setRepeatCount(0);
-                animator1.addListener(new Animator.AnimatorListener() {
-                    @Override
-                    public void onAnimationStart(Animator animation) {}
-
-                    @Override
-                    public void onAnimationEnd(Animator animation) {
-                        if (animator2.isRunning()) {
-                            onRaceEnd(true);
-                            stopButtonVisibilityCycle();
-                        }
-                    }
-
-                    @Override
-                    public void onAnimationCancel(Animator animation) {}
-
-                    @Override
-                    public void onAnimationRepeat(Animator animation) {}
-                });
-                animator1.start();
-
-                float racer2timer = 16.00f;
-
-                if ("Race1".equals(race))
-                {
-                    racer2timer = racer1;
-                }
-                else if ("Race2".equals(race))
-                {
-                    racer2timer = racer2;
-                }
-                else if ("Race3".equals(race))
-                {
-                    racer2timer = racer3;
-                }
-                Toast.makeText(RaceActivity.this, "Racer2time: " + racer2timer, Toast.LENGTH_SHORT).show();
-                animator2 = ObjectAnimator.ofFloat(imageView2, "translationX", 0f, screenWidth - 380f);
-                animator2.setDuration((long) (racer2timer * 1000));
-                animator2.setRepeatCount(0);
-                animator2.addListener(new Animator.AnimatorListener() {
-                    @Override
-                    public void onAnimationStart(Animator animation) {}
-
-                    @Override
-                    public void onAnimationEnd(Animator animation) {
-                        if (animator1.isRunning()) {
-                            onRaceEnd(false);
-                            stopButtonVisibilityCycle();
-                        }
-                    }
-
-                    @Override
-                    public void onAnimationCancel(Animator animation) {}
-
-                    @Override
-                    public void onAnimationRepeat(Animator animation) {}
-                });
-                animator2.start();
-                startButtonVisibilityCycle();
+                isCountdownActive = false;
+                startAnimation2();
             }
         }.start();
+    }
+    private void startAnimation2()
+    {
+        float screenWidth = getResources().getDisplayMetrics().widthPixels;
+
+        float racer2timer = 16.00f;
+
+        if ("Race1".equals(race)) {
+            racer2timer = racer1;
+        } else if ("Race2".equals(race)) {
+            racer2timer = racer2;
+        } else if ("Race3".equals(race)) {
+            racer2timer = racer3;
+        }
+        Toast.makeText(RaceActivity.this, "Racer2time: " + racer2timer, Toast.LENGTH_SHORT).show();
+        animator2 = ObjectAnimator.ofFloat(imageView2, "translationX", 0f, screenWidth - 380f);
+        animator2.setDuration((long) (racer2timer * 1000));
+        animator2.setRepeatCount(0);
+        animator2.addListener(new Animator.AnimatorListener() {
+            @Override
+            public void onAnimationStart(Animator animation) {}
+
+            @Override
+            public void onAnimationEnd(Animator animation) {
+                if (animator1 == null || !animator1.isRunning()) {
+                    onRaceEnd(false);
+                    stopButtonVisibilityCycle();
+                }
+            }
+
+            @Override
+            public void onAnimationCancel(Animator animation) {}
+
+            @Override
+            public void onAnimationRepeat(Animator animation) {}
+        });
+        animator2.start();
+    }
+    private void startAnimationsAfterCountdown() {
+        float screenWidth = getResources().getDisplayMetrics().widthPixels;
+
+        animator1 = ObjectAnimator.ofFloat(imageView1, "translationX", 0f, screenWidth - 380f);
+        animator1.setDuration((long) (animationDuration * 1000));
+        animator1.setRepeatCount(0);
+        animator1.addListener(new Animator.AnimatorListener() {
+            @Override
+            public void onAnimationStart(Animator animation) {}
+
+            @Override
+            public void onAnimationEnd(Animator animation) {
+                if (animator1 != null && animator1.isRunning()) {
+                    onRaceEnd(true);
+                    stopButtonVisibilityCycle();
+                }
+            }
+
+            @Override
+            public void onAnimationCancel(Animator animation) {}
+
+            @Override
+            public void onAnimationRepeat(Animator animation) {}
+
+
+        });
+
+        startButton.setVisibility(View.GONE);
+        animator1.start();
+        startButtonVisibilityCycle();
+
+
     }
 
     private void stopButtonVisibilityCycle() {
@@ -219,16 +253,11 @@ public class RaceActivity extends AppCompatActivity {
         if (playerWon) {
             countdownTextView.setText("WIN");
             SharedPreferences prefs = getSharedPreferences("Race1Results", MODE_PRIVATE);
-            if ("Race1".equals(race))
-            {
+            if ("Race1".equals(race)) {
                 prefs = getSharedPreferences("Race1Results", MODE_PRIVATE);
-            }
-            else if ("Race2".equals(race))
-            {
+            } else if ("Race2".equals(race)) {
                 prefs = getSharedPreferences("Race2Results", MODE_PRIVATE);
-            }
-            else if ("Race3".equals(race))
-            {
+            } else if ("Race3".equals(race)) {
                 prefs = getSharedPreferences("Race3Results", MODE_PRIVATE);
             }
 
@@ -238,6 +267,14 @@ public class RaceActivity extends AppCompatActivity {
             Toast.makeText(RaceActivity.this, "Race " + race + " saved", Toast.LENGTH_SHORT).show();
         } else {
             countdownTextView.setText("LOSS");
+            startButton.setVisibility(View.GONE);
         }
+    }
+
+    public void disqualifiedCheck() {
+        countdownTextView.setText("LOSS");
+        startButton.setVisibility(View.GONE);
+        button.setVisibility(View.GONE);
+        raceMapButton.setVisibility(View.VISIBLE);
     }
 }
